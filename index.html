@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CG — Serveur Discord &amp; CG Game App</title>
+<meta name="description" content="CG : la communauté Discord gaming et son application CG Game App. Jeux PC, jeux Sony PC, films, séries, animés, logiciels et packs graphiques.">
+<meta name="theme-color" content="#7c5cff">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<style>
+/* ============ THÈME (modifiable) ============ */
+:root{
+  --accent:#7c5cff;
+  --accent-2:#c06bff;
+  --bg:#07070f;
+  --bg-2:#0e0e1c;
+  --card:rgba(20,20,38,.62);
+  --line:rgba(255,255,255,.08);
+  --text:#ecebff;
+  --muted:#9b9ab8;
+  --radius:18px;
+  --glow:0 0 0 1px rgba(255,255,255,.06), 0 20px 60px -20px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,.brand{line-height:1.15;font-family:"Space Grotesk",Inter,sans-serif;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+body.no-anim *{animation:none!important;transition:none!important}
+
+/* ============ FOND ÉTOILÉ ============ */
+#stars{position:fixed;inset:0;z-index:-2;display:block}
+.nebula{position:fixed;inset:-20%;z-index:-3;pointer-events:none;
+  background:
+    radial-gradient(40% 35% at 20% 15%, color-mix(in srgb,var(--accent) 22%,transparent), transparent 70%),
+    radial-gradient(35% 30% at 85% 30%, color-mix(in srgb,var(--accent-2) 16%,transparent), transparent 70%),
+    radial-gradient(50% 40% at 50% 110%, color-mix(in srgb,var(--accent) 14%,transparent), transparent 70%),
+    var(--bg);
+  animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(-3%,2%,0) scale(1.05)}}
+
+/* ============ NAV ============ */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,7,15,.55);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:28px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem}
+.logo{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:.95rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 6px 20px -6px var(--accent)}
+.nav-links{display:flex;gap:22px;margin-left:auto;font-size:.93rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:12px;font-weight:600;font-size:.95rem;transition:transform .2s, box-shadow .2s, background .2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 10px 30px -10px var(--accent)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--accent)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.09)}
+.icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.icon-btn:hover{background:rgba(255,255,255,.1)}
+
+/* ============ HERO ============ */
+.hero{padding:110px 0 80px;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  background:color-mix(in srgb,var(--accent) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);color:color-mix(in srgb,var(--accent) 40%,white)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3ddc97;box-shadow:0 0 10px #3ddc97;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.hero h1{font-size:clamp(2.6rem,5.6vw,4.4rem);line-height:1.04;margin:22px 0 20px}
+.grad{background:linear-gradient(120deg,#fff 10%,var(--accent-2) 55%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.12rem;color:var(--muted);max-width:540px}
+.cta{display:flex;gap:12px;margin:34px 0 44px;flex-wrap:wrap}
+.stats{display:flex;gap:38px;flex-wrap:wrap}
+.stat b{display:block;font-family:"Space Grotesk";font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+
+/* Faux Discord */
+.mock{border-radius:var(--radius);background:var(--card);border:1px solid var(--line);box-shadow:var(--glow);backdrop-filter:blur(10px);overflow:hidden;transform-style:preserve-3d}
+.mock-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-weight:600}
+.mock-head .logo{width:28px;height:28px;font-size:.75rem;border-radius:9px}
+.mock-body{padding:14px 10px;max-height:430px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 80%,transparent)}
+.cat{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:12px 10px 6px}
+.chan{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;color:#c6c5de;font-size:.93rem}
+.chan:hover{background:rgba(255,255,255,.05)}
+.chan .h{opacity:.45;font-weight:600}
+.chan.active{background:color-mix(in srgb,var(--accent) 18%,transparent);color:#fff}
+.chan .badge{margin-left:auto;font-size:.7rem;background:var(--accent);padding:1px 7px;border-radius:99px;color:#fff;font-weight:700}
+
+/* ============ SECTIONS ============ */
+section{padding:90px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 54px}
+.sec-head h2{font-size:clamp(2rem,3.6vw,2.8rem);margin:16px 0 12px}
+.sec-head p{color:var(--muted)}
+.grid{display:grid;gap:20px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{position:relative;padding:26px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);
+  transform-style:preserve-3d;transition:transform .25s ease, border-color .25s, box-shadow .25s;will-change:transform}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:var(--glow)}
+.card .ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:1.35rem;margin-bottom:18px;
+  background:color-mix(in srgb,var(--accent) 16%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);transform:translateZ(30px)}
+.card h3{font-size:1.15rem;margin-bottom:8px;transform:translateZ(20px)}
+.card p{color:var(--muted);font-size:.94rem}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.08), transparent 60%)}
+.card:hover::after{opacity:1}
+
+/* App window */
+.app-row{display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+.win{border-radius:16px;overflow:hidden;background:#0b0b18;border:1px solid var(--line);box-shadow:var(--glow)}
+.win-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0f0f20;border-bottom:1px solid var(--line);font-size:.75rem;color:var(--muted);font-weight:600;letter-spacing:.06em}
+.win-bar i{width:10px;height:10px;border-radius:50%;background:#2a2a40;display:inline-block}
+.win-bar .t{margin:0 auto}
+.win-tabs{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--line);overflow:hidden}
+.win-tabs span{font-size:.76rem;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.04);color:var(--muted);white-space:nowrap}
+.win-tabs span.on{background:var(--accent);color:#fff}
+.win-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px}
+.tile{aspect-ratio:3/4;border-radius:10px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.tile::after{content:"";position:absolute;inset:auto 8px 8px 8px;height:8px;border-radius:4px;background:rgba(255,255,255,.18)}
+.win-toast{margin:0 16px 16px;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:.85rem}
+.win-toast b{display:block;font-size:.88rem}
+.win-toast small{color:var(--muted)}
+.feat-list{display:grid;gap:14px;margin-top:26px}
+.feat-list li{list-style:none;display:flex;gap:12px;color:var(--muted)}
+.feat-list li::before{content:"✦";color:var(--accent-2)}
+.feat-list b{color:var(--text);font-weight:600}
+
+/* Étapes */
+.step{counter-increment:s}
+.step .n::before{content:counter(s,decimal-leading-zero)}
+.step .n{font-family:"Space Grotesk";font-size:2.4rem;font-weight:700;color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--accent) 70%,white);display:block;margin-bottom:10px}
+.steps{counter-reset:s}
+
+/* Avis */
+.rating{display:flex;align-items:center;justify-content:center;gap:30px;flex-wrap:wrap}
+.big-note{font-family:"Space Grotesk";font-size:4.6rem;font-weight:700;line-height:1}
+.starsline{font-size:1.6rem;letter-spacing:4px;color:#ffc94d;text-shadow:0 0 18px rgba(255,201,77,.45)}
+
+/* CTA final */
+.final{text-align:center;padding:60px 30px;border-radius:28px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 30%,#0c0c1a),color-mix(in srgb,var(--accent-2) 22%,#0c0c1a));border:1px solid var(--line)}
+.final h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:12px}
+.final p{color:#d8d6f3;margin-bottom:28px}
+
+footer{padding:40px 0 50px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.sig{font-family:"Space Grotesk";letter-spacing:.14em;color:var(--text)}
+
+/* Inclinaison 3D */
+.tilt{transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .25s, box-shadow .25s}
+.tilt.tilting{transition:transform .08s linear, border-color .25s, box-shadow .25s}
+
+/* Révélation au scroll */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease, transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+
+/* ============ DÉFILEMENT DES MEMBRES ============ */
+.marquee{max-width:1100px;margin:0 auto;display:grid;gap:18px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);overflow:hidden;padding:6px 0}
+.mrow{display:flex;gap:18px;width:max-content;animation:scrollL var(--dur,60s) linear infinite}
+.mrow.rev{animation-name:scrollR}
+@keyframes scrollL{to{transform:translateX(-50%)}}
+@keyframes scrollR{from{transform:translateX(-50%)}to{transform:none}}
+.mcard{display:flex;align-items:center;gap:16px;min-width:260px;padding:18px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(8px);transition:border-color .25s, transform .25s}
+.mcard:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);transform:translateY(-3px)}
+.mav{position:relative;flex:none;width:52px;height:52px}
+.mav img,.mav .ph{width:52px;height:52px;border-radius:14px;object-fit:cover;display:grid;place-items:center;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+.mav i{position:absolute;right:-3px;bottom:-3px;width:15px;height:15px;border-radius:50%;border:3px solid #12121f;background:#3ddc97}
+.mav i.idle{background:#f0b232}.mav i.dnd{background:#f23f43}
+.mcard b{display:block;font-weight:600;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard small{color:var(--muted);font-size:.82rem;display:block;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.members-empty{text-align:center;color:var(--muted);font-size:.93rem}
+
+/* ============ PANNEAU PERSONNALISER ============ */
+.panel{position:fixed;top:80px;right:20px;width:300px;z-index:60;padding:22px;border-radius:var(--radius);background:rgba(14,14,28,.92);backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:0 30px 80px -20px #000;
+  transform:translateX(130%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.panel.open{transform:none}
+.panel h4{font-family:"Space Grotesk";font-size:1.05rem;margin-bottom:4px}
+.panel .lbl{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:30px;height:30px;border-radius:9px;border:2px solid transparent}
+.sw.on{border-color:#fff}
+.row{display:flex;align-items:center;justify-content:space-between;font-size:.9rem;margin:8px 0}
+input[type=range]{width:130px;accent-color:var(--accent)}
+.toggle{width:40px;height:22px;border-radius:99px;background:#2a2a40;position:relative;transition:background .2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on{background:var(--accent)}
+.toggle.on::after{transform:translateX(18px)}
+
+/* ============ MODALE TURNSTILE ============ */
+.modal{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(3,3,10,.7);backdrop-filter:blur(6px)}
+.modal.open{display:grid}
+.modal-box{width:min(420px,92vw);padding:30px;border-radius:22px;background:#10101f;border:1px solid var(--line);text-align:center;box-shadow:var(--glow)}
+.modal-box h3{font-size:1.35rem;margin-bottom:6px}
+.modal-box p{color:var(--muted);font-size:.93rem;margin-bottom:20px}
+#ts-box{display:flex;justify-content:center;min-height:70px}
+#ts-msg{font-size:.85rem;color:var(--muted);margin-top:12px;min-height:20px}
+#ts-result{display:none;margin-top:8px}
+#ts-result .btn{width:100%;justify-content:center}
+
+@media (max-width:900px){
+  .hero,.app-row{grid-template-columns:1fr}
+  .g3,.g4{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .hero{padding-top:60px}
+}
+@media (max-width:560px){.g3,.g4{grid-template-columns:1fr}.win-grid{grid-template-columns:repeat(3,1fr)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ============ LANGUE ============ */
+.lang{position:relative}
+.lang-btn{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-weight:600;font-size:.85rem}
+.lang-btn:hover{background:rgba(255,255,255,.1)}
+.caret{opacity:.6;font-size:.7rem}
+.flag{display:inline-flex;width:22px;height:15px;border-radius:3px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+.flag svg{width:100%;height:100%;display:block}
+.lang-menu{position:absolute;right:0;top:48px;min-width:170px;padding:6px;border-radius:14px;background:rgba(14,14,28,.96);border:1px solid var(--line);box-shadow:0 20px 50px -10px #000;backdrop-filter:blur(14px);
+  opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .2s, transform .2s}
+.lang-menu.open{opacity:1;transform:none;pointer-events:auto}
+.lang-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:9px;font-size:.9rem;text-align:left}
+.lang-menu button:hover{background:rgba(255,255,255,.06)}
+.lang-menu button.on{background:color-mix(in srgb,var(--accent) 20%,transparent)}
+/* Logo du serveur + chargement des salons */
+.mock-head .logo{overflow:hidden}
+.mock-head .logo img{width:100%;height:100%;object-fit:cover}
+.skl{display:inline-block;height:10px;border-radius:5px;background:rgba(255,255,255,.08);width:var(--w,60%);animation:pulse 1.6s infinite}
+.chan.sk:nth-child(2n) .skl{--w:45%}.chan.sk:nth-child(3n) .skl{--w:70%}
+</style>
+</head>
+<body>
+<div class="nebula"></div>
+<canvas id="stars"></canvas>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="wrap">
+    <a href="#top" class="brand"><span class="logo">CG</span><span>CG</span></a>
+    <div class="nav-links">
+      <a href="#serveur" data-i18n="nav.server"></a>
+      <a href="#app" data-i18n="nav.app"></a>
+      <a href="#comment" data-i18n="nav.how"></a>
+      <a href="#avis" data-i18n="nav.reviews"></a>
+      <a href="#membres" data-i18n="nav.members"></a>
+    </div>
+    <button class="icon-btn" id="openPanel" data-i18n-title="panel.title" aria-label="Personnaliser">🎨</button>
+    <button class="btn btn-primary" data-gate="discord" data-i18n="nav.join"></button>
+    <div class="lang">
+      <button class="lang-btn" id="langBtn" aria-haspopup="true"><span class="flag" id="langFlag"></span><span id="langCode">FR</span><span class="caret">▾</span></button>
+      <div class="lang-menu" id="langMenu">
+        <button data-lang="fr"><span class="flag" data-flag="fr"></span>Français</button>
+        <button data-lang="en"><span class="flag" data-flag="en"></span>English</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+<!-- ============ HERO ============ -->
+<div class="wrap hero">
+  <div class="reveal">
+    <span class="tag"><span class="dot"></span><span id="onlineTag" data-i18n="hero.tag"></span></span>
+    <h1><span data-i18n="hero.t1"></span><br><span class="grad" data-i18n="hero.t2"></span></h1>
+    <p class="lead" data-i18n="hero.lead"></p>
+    <div class="cta">
+      <button class="btn btn-primary" data-gate="discord" data-i18n="cta.join"></button>
+      <button class="btn btn-ghost" data-gate="download" data-i18n="cta.download"></button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="statMembers">—</b><span data-i18n="stat.members"></span></div>
+      <div class="stat"><b id="statOnline">—</b><span data-i18n="stat.online"></span></div>
+      <div class="stat"><b id="statNote">—</b><span data-i18n="stat.note"></span></div>
+    </div>
+  </div>
+
+  <div class="mock tilt reveal">
+    <div class="mock-head"><span class="logo" id="guildIcon">CG</span><span id="guildName">Serveur CG</span><span style="margin-left:auto;color:var(--muted);font-size:.8rem">⌄</span></div>
+    <div class="mock-body">
+      <div class="cat" id="catName">✦ CG</div>
+      <div id="chanList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SERVEUR ============ -->
+<section id="serveur">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="srv.tag"></span>
+      <h2 data-i18n="srv.title"></h2>
+      <p data-i18n="srv.sub"></p>
+    </div>
+    <div class="grid g3">
+      <div class="card tilt reveal"><div class="ic">🎮</div><h3 data-i18n="srv.c1t"></h3><p data-i18n="srv.c1"></p></div>
+      <div class="card tilt reveal"><div class="ic">📝</div><h3 data-i18n="srv.c2t"></h3><p data-i18n="srv.c2"></p></div>
+      <div class="card tilt reveal"><div class="ic">🎁</div><h3 data-i18n="srv.c3t"></h3><p data-i18n="srv.c3"></p></div>
+      <div class="card tilt reveal"><div class="ic">🛡️</div><h3 data-i18n="srv.c4t"></h3><p data-i18n="srv.c4"></p></div>
+      <div class="card tilt reveal"><div class="ic">⭐</div><h3 data-i18n="srv.c5t"></h3><p data-i18n="srv.c5"></p></div>
+      <div class="card tilt reveal"><div class="ic">🤝</div><h3 data-i18n="srv.c6t"></h3><p data-i18n="srv.c6"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<section id="app">
+  <div class="wrap app-row">
+    <div class="win tilt reveal">
+      <div class="win-bar"><i></i><i></i><i></i><span class="t">CG LAUNCHER — BETA</span></div>
+      <div class="win-tabs"><span data-i18n="tab.home"></span><span class="on" data-i18n="tab.pc"></span><span data-i18n="tab.sony"></span><span data-i18n="tab.movies"></span><span data-i18n="tab.series"></span><span data-i18n="tab.anime"></span><span data-i18n="tab.soft"></span><span data-i18n="tab.packs"></span></div>
+      <div class="win-grid" id="tiles"></div>
+      <div class="win-toast"><span style="font-size:1.4rem">🎮</span><div><b data-i18n="app.toastT"></b><small data-i18n="app.toast"></small></div></div>
+    </div>
+    <div class="reveal">
+      <span class="tag">CG Game App</span>
+      <h2 style="font-size:clamp(2rem,3.4vw,2.6rem);margin:16px 0 12px" data-i18n="app.title"></h2>
+      <p style="color:var(--muted)" data-i18n="app.sub"></p>
+      <ul class="feat-list">
+        <li><span data-i18n-html="app.f1"></span></li>
+        <li><span data-i18n-html="app.f2"></span></li>
+        <li><span data-i18n-html="app.f3"></span></li>
+        <li><span data-i18n-html="app.f4"></span></li>
+        <li><span data-i18n-html="app.f5"></span></li>
+        <li><span data-i18n-html="app.f6"></span></li>
+      </ul>
+      <div class="cta" style="margin-bottom:0"><button class="btn btn-primary" data-gate="download" data-i18n="app.dl"></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMMENT ============ -->
+<section id="comment">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="tag" data-i18n="how.tag"></span><h2 data-i18n="how.title"></h2></div>
+    <div class="grid g3 steps">
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s1t"></h3><p data-i18n="how.s1"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s2t"></h3><p data-i18n="how.s2"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s3t"></h3><p data-i18n="how.s3"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AVIS ============ -->
+<section id="avis">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="tag" data-i18n="rev.tag"></span><h2 data-i18n="rev.title"></h2><p data-i18n="rev.sub"></p></div>
+    <div class="rating reveal">
+      <div class="big-note" id="bigNote">—</div>
+      <div><div class="starsline" id="starsLine">☆☆☆☆☆</div><div style="color:var(--muted);font-size:.9rem" data-i18n="rev.on5"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBRES ============ -->
+<section id="membres">
+  <div class="sec-head reveal"><span class="tag"><span class="dot"></span><span data-i18n="mem.tag"></span></span><h2 data-i18n="mem.title"></h2><p id="membersSub"></p></div>
+  <div class="wrap"><div class="marquee" id="marquee"></div></div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section>
+  <div class="wrap">
+    <div class="final reveal">
+      <h2 data-i18n="fin.title"></h2>
+      <p data-i18n="fin.sub"></p>
+      <div class="cta" style="justify-content:center;margin:0">
+        <button class="btn btn-primary" data-gate="discord" data-i18n="cta.join"></button>
+        <button class="btn btn-ghost" data-gate="download" data-i18n="fin.dl"></button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> CG. <span data-i18n="foot"></span></span>
+    <span class="sig">DEV BY A$AP . I'LL . BCK</span>
+  </div>
+</footer>
+
+<!-- ============ PANNEAU ============ -->
+<aside class="panel" id="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h4 data-i18n="panel.title"></h4><button class="icon-btn" id="closePanel" style="width:32px;height:32px">✕</button>
+  </div>
+  <div class="lbl" data-i18n="panel.color"></div>
+  <div class="swatches" id="swatches"></div>
+  <div class="lbl" data-i18n="panel.stars"></div>
+  <div class="row"><span data-i18n="panel.show"></span> <button class="toggle on" id="tgStars"></button></div>
+  <div class="row"><span data-i18n="panel.density"></span> <input type="range" id="rgDensity" min="50" max="600" value="260"></div>
+  <div class="row"><span data-i18n="panel.speed"></span> <input type="range" id="rgSpeed" min="0" max="30" value="8"></div>
+  <div class="row"><span data-i18n="panel.shoot"></span> <button class="toggle on" id="tgShoot"></button></div>
+  <div class="lbl" data-i18n="panel.fx"></div>
+  <div class="row"><span data-i18n="panel.tilt"></span> <button class="toggle on" id="tgTilt"></button></div>
+  <div class="row"><span data-i18n="panel.anim"></span> <button class="toggle on" id="tgAnim"></button></div>
+  <button class="btn btn-ghost" id="resetPrefs" style="width:100%;justify-content:center;margin-top:18px" data-i18n="panel.reset"></button>
+</aside>
+
+<!-- ============ MODALE VÉRIF ============ -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <p data-i18n="modal.sub"></p>
+    <div id="ts-box"></div>
+    <div id="ts-msg"></div>
+    <div id="ts-result"><a class="btn btn-primary" id="ts-link" target="_blank" rel="noopener"></a></div>
+    <button class="btn btn-ghost" id="closeModal" style="margin-top:14px" data-i18n="modal.cancel"></button>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIG — la seule partie à modifier
+   ===================================================== */
+const CONFIG = {
+  // Clé publique Turnstile (Cloudflare > Turnstile > ton site > "Site Key").
+  // Laisse vide pour tester : les liens s'affichent sans vérification.
+  turnstileSiteKey: "",
+  verifyUrl: "/api/verify",
+  // Infos du serveur (salons de la catégorie CG, membres, note) via le bot.
+  discordApiUrl: "/api/discord",
+  // Rafraîchissement automatique (en millisecondes) : 2 minutes.
+  refreshEvery: 120000,
+  inviteCode: "u4cY9qsRQ3",
+  guildId: "1367759439138132039",
+  memberRows: 3,
+  // Vitesse du défilement au survol de la souris (1 = normal, 0.25 = 4 fois plus lent).
+  hoverSpeed: 0.25,
+  palettes: [
+    ["#7c5cff","#c06bff"], ["#5865f2","#8b9bff"], ["#ff4d8d","#ff9a5c"],
+    ["#00c2a8","#4de1ff"], ["#ffb020","#ff6a3d"], ["#e5e5f0","#9b9ab8"]
+  ]
+};
+
+/* ============ TEXTES FR / EN ============ */
+const I18N = {
+  fr: {
+    "title":"CG — Serveur Discord & CG Game App",
+    "nav.server":"Le serveur","nav.app":"L'app","nav.how":"Comment ça marche","nav.reviews":"Avis","nav.members":"Membres","nav.join":"Rejoindre",
+    "hero.tag":"Serveur en ligne","hero.tagN":"{n} membres en ligne",
+    "hero.t1":"Ta communauté gaming,","hero.t2":"tout au même endroit.",
+    "hero.lead":"CG, c'est un serveur Discord et une application : jeux PC, jeux Sony PC, films, séries, animés, logiciels et packs graphiques, ajoutés à la demande des membres.",
+    "cta.join":"Rejoindre le Discord","cta.download":"⬇ Télécharger CG Game App",
+    "stat.members":"membres","stat.online":"en ligne","stat.note":"note moyenne / 5",
+    "srv.tag":"Le serveur","srv.title":"Un Discord propre, actif et bien rangé","srv.sub":"Chaque catégorie a son salon. Tu demandes, l'équipe ajoute, tout le monde est prévenu.",
+    "srv.c1t":"Annonces automatiques","srv.c1":"Chaque nouveauté est annoncée dans le bon salon : jeux PC, Sony PC, mises à jour, vidéos, logiciels, packs.",
+    "srv.c2t":"Demandes d'ajout","srv.c2":"Il te manque quelque chose ? Fais une demande, le bot te répond directement quand elle est traitée.",
+    "srv.c3t":"Giveaways","srv.c3":"Des clés et codes de jeux à gagner régulièrement, tirés au sort automatiquement pour les membres.",
+    "srv.c4t":"Modération sérieuse","srv.c4":"Liens douteux bloqués, faux cadeaux filtrés, blacklist : le serveur reste sain.",
+    "srv.c5t":"Avis transparents","srv.c5":"Les avis laissés depuis l'app sont publiés sur le serveur et la note moyenne est visible par tous.",
+    "srv.c6t":"Une vraie communauté","srv.c6":"Discussions, entraide et partage entre passionnés, dans une ambiance chill.",
+    "tab.home":"Accueil","tab.pc":"Jeux PC","tab.sony":"Jeux Sony PC","tab.movies":"Films","tab.series":"Séries","tab.anime":"Animés","tab.soft":"Logiciels","tab.packs":"Packs",
+    "app.toastT":"Nouveau jeu ajouté","app.toast":"Disponible maintenant dans Jeux PC",
+    "app.title":"Tout le catalogue CG, dans une app légère","app.sub":"Connecte-toi avec Discord et retrouve tout le contenu du serveur, rangé par catégorie et mis à jour en direct.",
+    "app.f1":"<b>Connexion Discord</b> : un clic, pas de compte à créer.","app.f2":"<b>Catalogue en ligne</b> : les nouveautés arrivent sans réinstaller l'app.",
+    "app.f3":"<b>Notifications</b> pour chaque nouvel ajout.","app.f4":"<b>Demandes et avis</b> envoyés directement depuis l'app.",
+    "app.f5":"<b>Membres connectés</b> visibles en temps réel.","app.f6":"<b>Français / English</b>, en un clic.",
+    "app.dl":"⬇ Télécharger pour Windows",
+    "how.tag":"En 3 étapes","how.title":"Comment ça marche",
+    "how.s1t":"Rejoins le Discord","how.s1":"Passe la vérification, rejoins le serveur et récupère le rôle CG Membre.",
+    "how.s2t":"Installe l'app","how.s2":"Télécharge CG Game App pour Windows, installe-la et connecte-toi avec Discord.",
+    "how.s3t":"Profite","how.s3":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "rev.tag":"Avis","rev.title":"Ce qu'en pense la communauté","rev.sub":"Note calculée à partir des avis envoyés depuis l'app.","rev.on5":"sur 5, avis vérifiés des membres",
+    "mem.tag":"En direct","mem.title":"Ils sont sur CG","mem.sub":"Les membres connectés en ce moment sur le serveur.","mem.subN":"{n} membres connectés en ce moment sur le serveur.","mem.empty":"La liste des membres arrive bientôt.",
+    "st.online":"En ligne","st.idle":"Absent","st.dnd":"Ne pas déranger",
+    "fin.title":"Prêt à rejoindre CG ?","fin.sub":"Le serveur et l'app sont gratuits. Il suffit d'une vérification rapide.","fin.dl":"⬇ Télécharger l'app",
+    "foot":"Non affilié à Discord.",
+    "panel.title":"Personnaliser","panel.color":"Couleur","panel.stars":"Étoiles","panel.show":"Afficher","panel.density":"Densité","panel.speed":"Vitesse","panel.shoot":"Étoiles filantes","panel.fx":"Effets","panel.tilt":"Cartes 3D","panel.anim":"Animations","panel.reset":"Réinitialiser",
+    "modal.sub":"Petite vérification anti-robot avant d'afficher le lien.","modal.cancel":"Annuler","modal.discord":"Rejoindre le Discord CG","modal.download":"Télécharger CG Game App",
+    "modal.test":"Mode test : Turnstile n'est pas encore configuré.","modal.loading":"Chargement…","modal.checking":"Vérification…","modal.ok":"✓ Vérifié","modal.fail":"La vérification a échoué, réessaie.",
+    "modal.openDiscord":"Ouvrir l'invitation Discord","modal.dlNow":"Télécharger maintenant"
+  },
+  en: {
+    "title":"CG — Discord Server & CG Game App",
+    "nav.server":"The server","nav.app":"The app","nav.how":"How it works","nav.reviews":"Reviews","nav.members":"Members","nav.join":"Join",
+    "hero.tag":"Server online","hero.tagN":"{n} members online",
+    "hero.t1":"Your gaming community,","hero.t2":"all in one place.",
+    "hero.lead":"CG is a Discord server and an app: PC games, Sony PC games, movies, series, anime, software and graphic packs, added at members' request.",
+    "cta.join":"Join the Discord","cta.download":"⬇ Download CG Game App",
+    "stat.members":"members","stat.online":"online","stat.note":"average rating / 5",
+    "srv.tag":"The server","srv.title":"A clean, active and well-organized Discord","srv.sub":"Every category has its own channel. You ask, the team adds it, everyone gets notified.",
+    "srv.c1t":"Automatic announcements","srv.c1":"Every new addition is announced in the right channel: PC games, Sony PC, updates, videos, software, packs.",
+    "srv.c2t":"Add requests","srv.c2":"Missing something? Make a request, the bot replies directly once it's handled.",
+    "srv.c3t":"Giveaways","srv.c3":"Game keys and codes to win regularly, drawn automatically for members.",
+    "srv.c4t":"Serious moderation","srv.c4":"Shady links blocked, fake gifts filtered, blacklist: the server stays clean.",
+    "srv.c5t":"Transparent reviews","srv.c5":"Reviews sent from the app are posted on the server and the average rating is visible to everyone.",
+    "srv.c6t":"A real community","srv.c6":"Chats, help and sharing between enthusiasts, in a chill atmosphere.",
+    "tab.home":"Home","tab.pc":"PC Games","tab.sony":"Sony PC Games","tab.movies":"Movies","tab.series":"Series","tab.anime":"Anime","tab.soft":"Software","tab.packs":"Packs",
+    "app.toastT":"New game added","app.toast":"Available now in PC Games",
+    "app.title":"The whole CG catalog, in a lightweight app","app.sub":"Sign in with Discord and find all the server's content, sorted by category and updated live.",
+    "app.f1":"<b>Discord sign-in</b>: one click, no account to create.","app.f2":"<b>Online catalog</b>: new content arrives without reinstalling the app.",
+    "app.f3":"<b>Notifications</b> for every new addition.","app.f4":"<b>Requests and reviews</b> sent straight from the app.",
+    "app.f5":"<b>Online members</b> visible in real time.","app.f6":"<b>Français / English</b>, in one click.",
+    "app.dl":"⬇ Download for Windows",
+    "how.tag":"3 steps","how.title":"How it works",
+    "how.s1t":"Join the Discord","how.s1":"Pass the verification, join the server and get the CG Member role.",
+    "how.s2t":"Install the app","how.s2":"Download CG Game App for Windows, install it and sign in with Discord.",
+    "how.s3t":"Enjoy","how.s3":"Browse the catalog, make requests and leave a review.",
+    "rev.tag":"Reviews","rev.title":"What the community thinks","rev.sub":"Rating based on reviews sent from the app.","rev.on5":"out of 5, verified member reviews",
+    "mem.tag":"Live","mem.title":"They're on CG","mem.sub":"Members currently online on the server.","mem.subN":"{n} members currently online on the server.","mem.empty":"The member list is coming soon.",
+    "st.online":"Online","st.idle":"Idle","st.dnd":"Do not disturb",
+    "fin.title":"Ready to join CG?","fin.sub":"The server and the app are free. It only takes a quick verification.","fin.dl":"⬇ Download the app",
+    "foot":"Not affiliated with Discord.",
+    "panel.title":"Customize","panel.color":"Color","panel.stars":"Stars","panel.show":"Show","panel.density":"Density","panel.speed":"Speed","panel.shoot":"Shooting stars","panel.fx":"Effects","panel.tilt":"3D cards","panel.anim":"Animations","panel.reset":"Reset",
+    "modal.sub":"Quick anti-bot check before showing the link.","modal.cancel":"Cancel","modal.discord":"Join the CG Discord","modal.download":"Download CG Game App",
+    "modal.test":"Test mode: Turnstile isn't set up yet.","modal.loading":"Loading…","modal.checking":"Checking…","modal.ok":"✓ Verified","modal.fail":"Verification failed, please try again.",
+    "modal.openDiscord":"Open the Discord invite","modal.dlNow":"Download now"
+  }
+};
+const FLAGS = {
+  fr:'<svg viewBox="0 0 3 2"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>',
+  en:'<svg viewBox="0 0 19 10"><rect width="19" height="10" fill="#B22234"/><g fill="#fff"><rect y="0.77" width="19" height="0.77"/><rect y="2.31" width="19" height="0.77"/><rect y="3.85" width="19" height="0.77"/><rect y="5.38" width="19" height="0.77"/><rect y="6.92" width="19" height="0.77"/><rect y="8.46" width="19" height="0.77"/></g><rect width="7.6" height="5.38" fill="#3C3B6E"/></svg>'
+};
+let LANG = "fr";
+try{ LANG = localStorage.getItem("cg-lang") || "fr" }catch(e){}
+const t = (k, n) => (I18N[LANG][k] ?? I18N.fr[k] ?? k).replace("{n}", n);
+const nf = n => new Intl.NumberFormat(LANG === "fr" ? "fr-FR" : "en-US", {notation:"compact", maximumFractionDigits:1}).format(n);
+
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll("[data-i18n-html]").forEach(el => el.innerHTML = t(el.dataset.i18nHtml));
+  document.querySelectorAll("[data-i18n-title]").forEach(el => el.title = t(el.dataset.i18nTitle));
+  langFlag.innerHTML = FLAGS[LANG]; langCode.textContent = LANG.toUpperCase();
+  document.querySelectorAll("[data-lang]").forEach(b => b.classList.toggle("on", b.dataset.lang === LANG));
+  renderData(); renderMembers(true);
+  if(widgetId !== null && window.turnstile){ turnstile.remove(widgetId); widgetId = null }
+}
+document.querySelectorAll("[data-flag]").forEach(s => s.innerHTML = FLAGS[s.dataset.flag]);
+langBtn.onclick = e => { e.stopPropagation(); langMenu.classList.toggle("open") };
+document.addEventListener("click", () => langMenu.classList.remove("open"));
+document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => {
+  LANG = b.dataset.lang; try{ localStorage.setItem("cg-lang", LANG) }catch(e){}
+  langMenu.classList.remove("open"); applyLang();
+});
+
+/* ============ PRÉFÉRENCES (sauvegardées) ============ */
+const DEF = {pal:0, stars:true, density:260, speed:8, shoot:true, tilt:true, anim:true};
+let P = {...DEF};
+try{ P = {...DEF, ...JSON.parse(localStorage.getItem("cg-prefs")||"{}")} }catch(e){}
+const save = () => { try{ localStorage.setItem("cg-prefs", JSON.stringify(P)) }catch(e){} };
+
+function applyPrefs(){
+  const [a,b] = CONFIG.palettes[P.pal] || CONFIG.palettes[0];
+  document.documentElement.style.setProperty("--accent", a);
+  document.documentElement.style.setProperty("--accent-2", b);
+  document.body.classList.toggle("no-anim", !P.anim);
+  canvas.style.display = P.stars ? "block" : "none";
+  tg("tgStars",P.stars); tg("tgShoot",P.shoot); tg("tgTilt",P.tilt); tg("tgAnim",P.anim);
+  rgDensity.value = P.density; rgSpeed.value = P.speed;
+  document.querySelectorAll(".sw").forEach((s,i)=>s.classList.toggle("on",i===P.pal));
+  buildStars();
+}
+function tg(id,on){ document.getElementById(id).classList.toggle("on",on) }
+
+/* ============ FOND ÉTOILÉ (canvas) ============ */
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+let W, H, DPR, stars = [], shooting = [], mouse = {x:0, y:0}, sx = 0, sy = 0;
+
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = canvas.width = innerWidth * DPR;
+  H = canvas.height = innerHeight * DPR;
+  canvas.style.width = innerWidth + "px";
+  canvas.style.height = innerHeight + "px";
+  buildStars();
+}
+function buildStars(){
+  if(!W) return;
+  stars = Array.from({length: +P.density}, () => ({
+    x: Math.random()*W, y: Math.random()*H,
+    z: Math.random()*0.9 + 0.1,
+    r: Math.random()*1.3 + 0.2,
+    tw: Math.random()*Math.PI*2,
+    ts: Math.random()*0.03 + 0.008,
+    tint: Math.random() < 0.15
+  }));
+}
+addEventListener("mousemove", e => { mouse.x = e.clientX/innerWidth - .5; mouse.y = e.clientY/innerHeight - .5 });
+
+function frame(){
+  requestAnimationFrame(frame);
+  if(!P.stars) return;
+  ctx.clearRect(0,0,W,H);
+  const speed = P.speed / 10;
+  const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent-2").trim();
+  sx += (mouse.x*40 - sx) * .05;
+  sy += (mouse.y*40 - sy) * .05;
+  for(const s of stars){
+    s.y -= s.z * speed * DPR * 0.25;
+    if(s.y < -5) { s.y = H + 5; s.x = Math.random()*W }
+    s.tw += s.ts;
+    const a = 0.35 + Math.sin(s.tw) * 0.35 + 0.3 * s.z;
+    const x = s.x + sx * s.z * DPR, y = s.y + sy * s.z * DPR;
+    const r = s.r * s.z * DPR * 1.4;
+    ctx.globalAlpha = Math.max(0, Math.min(1, a));
+    ctx.fillStyle = s.tint ? accent : "#ffffff";
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
+    if(r > 1.6*DPR && a > .85){
+      ctx.globalAlpha = (a-.85)*3;
+      ctx.fillRect(x - r*3, y - .5*DPR, r*6, DPR);
+      ctx.fillRect(x - .5*DPR, y - r*3, DPR, r*6);
+    }
+  }
+  if(P.shoot && Math.random() < 0.004) shooting.push({x:Math.random()*W, y:Math.random()*H*.4, vx:-(6+Math.random()*6)*DPR, vy:(3+Math.random()*3)*DPR, life:1});
+  shooting = shooting.filter(f => f.life > 0);
+  for(const f of shooting){
+    const g = ctx.createLinearGradient(f.x, f.y, f.x - f.vx*10, f.y - f.vy*10);
+    g.addColorStop(0, "rgba(255,255,255,"+f.life+")"); g.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = 1.5*DPR;
+    ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(f.x - f.vx*10, f.y - f.vy*10); ctx.stroke();
+    f.x += f.vx; f.y += f.vy; f.life -= 0.015;
+  }
+  ctx.globalAlpha = 1;
+}
+addEventListener("resize", resize);
+
+/* ============ CARTES 3D ============ */
+document.querySelectorAll(".tilt").forEach(el => {
+  el.addEventListener("mousemove", e => {
+    if(!P.tilt) return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left)/r.width, py = (e.clientY - r.top)/r.height;
+    const k = el.offsetWidth > 600 ? .7 : 1;
+    el.classList.add("tilting");
+    el.style.transform = `perspective(900px) rotateX(${(.5-py)*18*k}deg) rotateY(${(px-.5)*22*k}deg) scale(1.03)`;
+    el.style.setProperty("--mx", px*100+"%"); el.style.setProperty("--my", py*100+"%");
+  });
+  el.addEventListener("mouseleave", () => { el.classList.remove("tilting"); el.style.transform = "" });
+});
+
+/* ============ APPARITION AU SCROLL ============ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(!e.isIntersecting) return;
+  const el = e.target; el.classList.add("in"); io.unobserve(el);
+  setTimeout(() => { el.classList.remove("reveal","in"); el.style.transitionDelay = "" }, 1100);
+}), {threshold:.12});
+document.querySelectorAll(".reveal").forEach((el,i) => { el.style.transitionDelay = (i%3)*90+"ms"; io.observe(el) });
+
+/* ============ FAUSSES JAQUETTES (aperçu app) ============ */
+const tiles = document.getElementById("tiles");
+for(let i=0;i<8;i++){
+  const d = document.createElement("div"); d.className = "tile";
+  const h = (i*47 + 250) % 360;
+  d.style.background = `linear-gradient(160deg, hsl(${h} 70% 45%), hsl(${(h+50)%360} 60% 18%))`;
+  tiles.appendChild(d);
+}
+
+/* ============ DONNÉES DU SERVEUR (salons, membres, note) ============ */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CH_ICON = {0:"#", 5:"📢", 2:"🔊", 13:"🎙️", 15:"💬", 16:"🖼️"};
+let DATA = null;   // réponse de /api/discord
+
+function renderData(){
+  // Salons (catégorie CG)
+  const list = DATA && DATA.channels && DATA.channels.length ? DATA.channels : null;
+  catName.textContent = "✦ " + (DATA && DATA.category ? DATA.category : "CG");
+  chanList.innerHTML = list
+    ? list.map((c,i) => `<div class="chan${i===0?" active":""}"><span class="h">${CH_ICON[c.type]||"#"}</span>${esc(c.name)}</div>`).join("")
+    : Array.from({length:8}, () => `<div class="chan sk"><span class="h">#</span><span class="skl"></span></div>`).join("");
+  if(DATA && DATA.name){
+    guildName.textContent = DATA.name;
+    if(DATA.icon) guildIcon.innerHTML = `<img src="${esc(DATA.icon)}" alt="">`;
+  }
+  // Chiffres
+  if(DATA && DATA.members != null){
+    statMembers.textContent = nf(DATA.members);
+    statOnline.textContent  = nf(DATA.online);
+    onlineTag.textContent   = t("hero.tagN", nf(DATA.online));
+  }
+  // Note
+  if(DATA && DATA.rating != null){
+    const r = DATA.rating;
+    statNote.textContent = bigNote.textContent = r.toFixed(1);
+    const full = Math.round(r);
+    starsLine.textContent = "★".repeat(full) + "☆".repeat(5-full);
+  }
+}
+async function loadData(){
+  try{
+    const r = await fetch(CONFIG.discordApiUrl, {cache:"no-store"});
+    const d = await r.json();
+    if(d.ok){ DATA = d; renderData() }
+  }catch(e){}
+}
+
+/* ============ MEMBRES CONNECTÉS (widget Discord) ============ */
+let MEMBERS = [], MEMBERS_KEY = "", PRESENCE = null;
+function memberCard(m){
+  const av = m.avatar_url ? `<img src="${esc(m.avatar_url)}" alt="" loading="lazy">` : `<span class="ph">${esc((m.username||"?")[0].toUpperCase())}</span>`;
+  const st = ["online","idle","dnd"].includes(m.status) ? m.status : "online";
+  const sub = m.activity && m.activity.name ? "🎮 " + m.activity.name : t("st." + st);
+  return `<div class="mcard"><div class="mav">${av}<i class="${st}"></i></div><div><b>${esc(m.username)}</b><small>${esc(sub)}</small></div></div>`;
+}
+function renderMembers(force){
+  membersSub.textContent = PRESENCE ? t("mem.subN", PRESENCE) : t("mem.sub");
+  const key = MEMBERS.map(m => m.username + m.status + (m.activity ? m.activity.name : "")).join("|");
+  if(!force && key === MEMBERS_KEY) return;   // rien n'a changé : on ne relance pas le défilement
+  MEMBERS_KEY = key;
+  const box = document.getElementById("marquee");
+  const list = MEMBERS;
+  if(!list.length){ box.innerHTML = `<p class="members-empty">${t("mem.empty")}</p>`; return }
+  const rows = Math.min(CONFIG.memberRows, Math.max(1, Math.ceil(list.length/4)));
+  const per = Math.ceil(list.length/rows);
+  box.innerHTML = "";
+  for(let r=0;r<rows;r++){
+    let part = list.slice(r*per, (r+1)*per);
+    if(!part.length) part = list;
+    while(part.length < 8) part = part.concat(part);
+    const row = document.createElement("div");
+    row.className = "mrow" + (r%2 ? " rev" : "");
+    row.style.setProperty("--dur", (part.length*5 + r*6) + "s");
+    row.innerHTML = part.map(memberCard).join("").repeat(2);
+    box.appendChild(row);
+  }
+}
+async function loadMembers(){
+  try{
+    const r = await fetch(`https://discord.com/api/guilds/${CONFIG.guildId}/widget.json`, {cache:"no-store"});
+    if(!r.ok) throw 0;
+    const d = await r.json();
+    PRESENCE = d.presence_count || null;
+    MEMBERS = (d.members||[]).slice().sort((a,b) => a.username.localeCompare(b.username));
+  }catch(e){}
+  renderMembers(false);
+}
+/* Ralentit en douceur au survol (sans s'arrêter), puis reprend */
+(() => {
+  const box = document.getElementById("marquee");
+  let target = 1, rate = 1;
+  box.addEventListener("mouseenter", () => target = CONFIG.hoverSpeed);
+  box.addEventListener("mouseleave", () => target = 1);
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(Math.abs(rate - target) < .005) return;
+    rate += (target - rate) * .08;
+    box.querySelectorAll(".mrow").forEach(r => r.getAnimations().forEach(a => a.playbackRate = rate));
+  })();
+})();
+
+year.textContent = new Date().getFullYear();
+
+/* ============ VÉRIFICATION TURNSTILE ============ */
+let gateType = null, widgetId = null;
+const modal = document.getElementById("modal");
+document.querySelectorAll("[data-gate]").forEach(b => b.addEventListener("click", () => openGate(b.dataset.gate)));
+closeModal.onclick = () => { modal.classList.remove("open"); if(widgetId!==null && window.turnstile) turnstile.reset(widgetId) };
+modal.onclick = e => { if(e.target===modal) closeModal.onclick() };
+
+function openGate(type){
+  gateType = type;
+  modalTitle.textContent = t(type==="discord" ? "modal.discord" : "modal.download");
+  document.getElementById("ts-result").style.display="none"; tsMsg("");
+  modal.classList.add("open");
+  if(!CONFIG.turnstileSiteKey){
+    tsMsg(t("modal.test"));
+    return showLink(type==="discord" ? "https://discord.gg/"+CONFIG.inviteCode : "#");
+  }
+  const go = () => {
+    if(widgetId===null){
+      widgetId = turnstile.render("#ts-box", {sitekey:CONFIG.turnstileSiteKey, theme:"dark", language:LANG, callback: verify});
+    } else turnstile.reset(widgetId);
+  };
+  window.turnstile ? go() : (tsMsg(t("modal.loading")), setTimeout(() => openGate(type), 400));
+}
+function tsMsg(s){ document.getElementById("ts-msg").textContent = s }
+async function verify(token){
+  tsMsg(t("modal.checking"));
+  try{
+    const r = await fetch(CONFIG.verifyUrl, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({token, type:gateType})});
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error||"refusé");
+    showLink(d.url);
+    tsMsg(t("modal.ok"));
+  }catch(e){
+    tsMsg(t("modal.fail"));
+    if(widgetId!==null) turnstile.reset(widgetId);
+  }
+}
+function showLink(url){
+  const link = document.getElementById("ts-link");
+  link.href = url;
+  link.textContent = t(gateType==="discord" ? "modal.openDiscord" : "modal.dlNow");
+  document.getElementById("ts-result").style.display = "block";
+}
+
+/* ============ PANNEAU ============ */
+const panel = document.getElementById("panel");
+openPanel.onclick = () => panel.classList.toggle("open");
+closePanel.onclick = () => panel.classList.remove("open");
+CONFIG.palettes.forEach(([a,b],i) => {
+  const s = document.createElement("button"); s.className="sw"; s.style.background=`linear-gradient(135deg,${a},${b})`;
+  s.onclick = () => { P.pal=i; save(); applyPrefs() }; swatches.appendChild(s);
+});
+const bind = (id,key) => document.getElementById(id).onclick = () => { P[key]=!P[key]; save(); applyPrefs() };
+bind("tgStars","stars"); bind("tgShoot","shoot"); bind("tgTilt","tilt"); bind("tgAnim","anim");
+rgDensity.oninput = e => { P.density=+e.target.value; save(); buildStars() };
+rgSpeed.oninput   = e => { P.speed=+e.target.value; save() };
+resetPrefs.onclick = () => { P={...DEF}; save(); applyPrefs() };
+
+/* ============ DÉMARRAGE ============ */
+resize(); applyPrefs(); applyLang(); frame();
+loadData(); loadMembers();
+setInterval(() => { loadData(); loadMembers() }, CONFIG.refreshEvery);
+</script>
+</body>
+</html>
