@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Officiel CG Launcher PC</title>
+<meta name="description" content="CG : Communauté Discord privée qui propose des Jeux PC, Logiciels PC & MAC, Films, Séries, Animés et Packs Graphiques gratuitement sans aucune PUB !">
+<meta name="theme-color" content="#7c5cff">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<style>
+/* ============ THÈME (modifiable) ============ */
+:root{
+  --accent:#7c5cff;
+  --accent-2:#c06bff;
+  --bg:#07070f;
+  --bg-2:#0e0e1c;
+  --card:rgba(20,20,38,.62);
+  --line:rgba(255,255,255,.08);
+  --text:#ecebff;
+  --muted:#9b9ab8;
+  --radius:18px;
+  --glow:0 0 0 1px rgba(255,255,255,.06), 0 20px 60px -20px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,.brand{line-height:1.15;font-family:"Space Grotesk",Inter,sans-serif;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+body.no-anim *{animation:none!important;transition:none!important}
+
+/* ============ FOND ÉTOILÉ ============ */
+#stars{position:fixed;inset:0;z-index:-2;display:block}
+.nebula{position:fixed;inset:-20%;z-index:-3;pointer-events:none;
+  background:
+    radial-gradient(40% 35% at 20% 15%, color-mix(in srgb,var(--accent) 22%,transparent), transparent 70%),
+    radial-gradient(35% 30% at 85% 30%, color-mix(in srgb,var(--accent-2) 16%,transparent), transparent 70%),
+    radial-gradient(50% 40% at 50% 110%, color-mix(in srgb,var(--accent) 14%,transparent), transparent 70%),
+    var(--bg);
+  animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(-3%,2%,0) scale(1.05)}}
+
+/* ============ NAV ============ */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,7,15,.55);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:28px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem}
+.brand-logo{height:38px;width:auto;display:block;filter:drop-shadow(0 4px 14px color-mix(in srgb,var(--accent) 55%,transparent))}
+.logo{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:.95rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 6px 20px -6px var(--accent)}
+.nav-links{display:flex;gap:22px;margin-left:auto;font-size:.93rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:12px;font-weight:600;font-size:.95rem;transition:transform .2s, box-shadow .2s, background .2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 10px 30px -10px var(--accent)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--accent)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.09)}
+.icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.icon-btn:hover{background:rgba(255,255,255,.1)}
+
+/* ============ HERO ============ */
+.hero{padding:110px 0 80px;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  background:color-mix(in srgb,var(--accent) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);color:color-mix(in srgb,var(--accent) 40%,white)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3ddc97;box-shadow:0 0 10px #3ddc97;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.hero h1{font-size:clamp(2.6rem,5.6vw,4.4rem);line-height:1.04;margin:22px 0 20px}
+.grad{background:linear-gradient(120deg,#fff 10%,var(--accent-2) 55%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.12rem;color:var(--muted);max-width:540px}
+.cta{display:flex;gap:12px;margin:34px 0 44px;flex-wrap:wrap}
+.stats{display:flex;gap:38px;flex-wrap:wrap}
+.stat b{display:block;font-family:"Space Grotesk";font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+
+/* Faux Discord */
+.mock{border-radius:var(--radius);background:var(--card);border:1px solid var(--line);box-shadow:var(--glow);backdrop-filter:blur(10px);overflow:hidden;transform-style:preserve-3d}
+.mock-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-weight:600}
+.mock-head .logo{width:28px;height:28px;font-size:.75rem;border-radius:9px}
+.mock-body{padding:14px 10px;max-height:430px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 80%,transparent)}
+.cat{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:12px 10px 6px}
+.chan{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;color:#c6c5de;font-size:.93rem}
+.chan:hover{background:rgba(255,255,255,.05)}
+.chan .h{opacity:.45;font-weight:600}
+.chan.active{background:color-mix(in srgb,var(--accent) 18%,transparent);color:#fff}
+.chan .badge{margin-left:auto;font-size:.7rem;background:var(--accent);padding:1px 7px;border-radius:99px;color:#fff;font-weight:700}
+
+/* ============ SECTIONS ============ */
+section{padding:90px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 54px}
+.sec-head h2{font-size:clamp(2rem,3.6vw,2.8rem);margin:16px 0 12px}
+.sec-head p{color:var(--muted)}
+.grid{display:grid;gap:20px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{position:relative;padding:26px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);
+  transform-style:preserve-3d;transition:transform .25s ease, border-color .25s, box-shadow .25s;will-change:transform}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:var(--glow)}
+.card .ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:1.35rem;margin-bottom:18px;
+  background:color-mix(in srgb,var(--accent) 16%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);transform:translateZ(30px)}
+.card h3{font-size:1.15rem;margin-bottom:8px;transform:translateZ(20px)}
+.card p{color:var(--muted);font-size:.94rem}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.08), transparent 60%)}
+.card:hover::after{opacity:1}
+
+/* App window */
+.app-row{display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+.win{border-radius:16px;overflow:hidden;background:#0b0b18;border:1px solid var(--line);box-shadow:var(--glow)}
+.win-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0f0f20;border-bottom:1px solid var(--line);font-size:.75rem;color:var(--muted);font-weight:600;letter-spacing:.06em}
+.win-bar i{width:10px;height:10px;border-radius:50%;background:#2a2a40;display:inline-block}
+.win-bar .t{margin:0 auto}
+.win-tabs{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--line);overflow:hidden}
+.win-tabs span{font-size:.76rem;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.04);color:var(--muted);white-space:nowrap}
+.win-tabs span.on{background:var(--accent);color:#fff}
+.win-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px}
+.tile{aspect-ratio:3/4;border-radius:10px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.tile::after{content:"";position:absolute;inset:auto 8px 8px 8px;height:8px;border-radius:4px;background:rgba(255,255,255,.18)}
+.win-toast{margin:0 16px 16px;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:.85rem}
+.win-toast b{display:block;font-size:.88rem}
+.win-toast small{color:var(--muted)}
+.feat-list{display:grid;gap:14px;margin-top:26px}
+.feat-list li{list-style:none;display:flex;gap:12px;color:var(--muted)}
+.feat-list li::before{content:"✦";color:var(--accent-2)}
+.feat-list b{color:var(--text);font-weight:600}
+
+/* Étapes */
+.step{counter-increment:s}
+.step .n::before{content:counter(s,decimal-leading-zero)}
+.step .n{font-family:"Space Grotesk";font-size:2.4rem;font-weight:700;color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--accent) 70%,white);display:block;margin-bottom:10px}
+.steps{counter-reset:s}
+
+/* Avis */
+.rating{display:flex;align-items:center;justify-content:center;gap:30px;flex-wrap:wrap}
+.big-note{font-family:"Space Grotesk";font-size:4.6rem;font-weight:700;line-height:1}
+.dlbox{padding-left:30px;border-left:1px solid var(--line);text-align:center}
+.big-dl{font-family:"Space Grotesk";font-size:3rem;font-weight:700;line-height:1;margin-bottom:6px}
+@media(max-width:600px){.dlbox{padding-left:0;border-left:0}}
+.starsline{font-size:1.6rem;letter-spacing:4px;color:#ffc94d;text-shadow:0 0 18px rgba(255,201,77,.45)}
+
+/* CTA final */
+.final{text-align:center;padding:60px 30px;border-radius:28px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 30%,#0c0c1a),color-mix(in srgb,var(--accent-2) 22%,#0c0c1a));border:1px solid var(--line)}
+.final h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:12px}
+.final p{color:#d8d6f3;margin-bottom:28px}
+
+footer{padding:40px 0 50px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.sig{font-family:"Space Grotesk";letter-spacing:.14em;color:var(--text)}
+
+/* Inclinaison 3D */
+.tilt{transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .25s, box-shadow .25s}
+.tilt.tilting{transition:transform .08s linear, border-color .25s, box-shadow .25s}
+
+/* Révélation au scroll */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease, transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+
+/* ============ DÉFILEMENT DES MEMBRES ============ */
+.marquee{max-width:1100px;margin:0 auto;display:grid;gap:18px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);overflow:hidden;padding:6px 0}
+.mrow{display:flex;gap:18px;width:max-content;animation:scrollL var(--dur,60s) linear infinite}
+.mrow.rev{animation-name:scrollR}
+@keyframes scrollL{to{transform:translateX(-50%)}}
+@keyframes scrollR{from{transform:translateX(-50%)}to{transform:none}}
+.mcard{display:flex;align-items:center;gap:16px;min-width:260px;padding:18px 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(8px);transition:border-color .25s, transform .25s}
+.mcard:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);transform:translateY(-3px)}
+.mav{position:relative;flex:none;width:52px;height:52px}
+.mav img,.mav .ph{width:52px;height:52px;border-radius:14px;object-fit:cover;display:grid;place-items:center;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+.mav i{position:absolute;right:-3px;bottom:-3px;width:15px;height:15px;border-radius:50%;border:3px solid #12121f;background:#3ddc97}
+.mav i.idle{background:#f0b232}.mav i.dnd{background:#f23f43}
+.mcard b{display:block;font-weight:600;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard small{color:var(--muted);font-size:.82rem;display:block;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.members-empty{text-align:center;color:var(--muted);font-size:.93rem}
+
+/* ============ PANNEAU PERSONNALISER ============ */
+.panel{position:fixed;top:80px;right:20px;width:300px;z-index:60;padding:22px;border-radius:var(--radius);background:rgba(14,14,28,.92);backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:0 30px 80px -20px #000;
+  transform:translateX(130%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.panel.open{transform:none}
+.panel h4{font-family:"Space Grotesk";font-size:1.05rem;margin-bottom:4px}
+.panel .lbl{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:30px;height:30px;border-radius:9px;border:2px solid transparent}
+.sw.on{border-color:#fff}
+.row{display:flex;align-items:center;justify-content:space-between;font-size:.9rem;margin:8px 0}
+input[type=range]{width:130px;accent-color:var(--accent)}
+.toggle{width:40px;height:22px;border-radius:99px;background:#2a2a40;position:relative;transition:background .2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on{background:var(--accent)}
+.toggle.on::after{transform:translateX(18px)}
+
+/* ============ MODALE TURNSTILE ============ */
+.modal{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(3,3,10,.7);backdrop-filter:blur(6px)}
+.modal.open{display:grid}
+.modal-box{width:min(420px,92vw);padding:30px;border-radius:22px;background:#10101f;border:1px solid var(--line);text-align:center;box-shadow:var(--glow)}
+.modal-box h3{font-size:1.35rem;margin-bottom:6px}
+.modal-box p{color:var(--muted);font-size:.93rem;margin-bottom:20px}
+#ts-box{display:flex;justify-content:center;min-height:70px}
+#ts-msg{font-size:.85rem;color:var(--muted);margin-top:12px;min-height:20px}
+#ts-result{display:none;margin-top:8px}
+#ts-result .btn{width:100%;justify-content:center}
+
+@media (max-width:900px){
+  .hero,.app-row{grid-template-columns:1fr}
+  .g3,.g4{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .hero{padding-top:60px}
+}
+@media (max-width:560px){.g3,.g4{grid-template-columns:1fr}.win-grid{grid-template-columns:repeat(3,1fr)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ============ LANGUE ============ */
+.lang{position:relative}
+.lang-btn{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-weight:600;font-size:.85rem}
+.lang-btn:hover{background:rgba(255,255,255,.1)}
+.caret{opacity:.6;font-size:.7rem}
+.flag{display:inline-flex;width:22px;height:15px;border-radius:3px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+.flag svg{width:100%;height:100%;display:block}
+.lang-menu{position:absolute;right:0;top:48px;min-width:170px;padding:6px;border-radius:14px;background:rgba(14,14,28,.96);border:1px solid var(--line);box-shadow:0 20px 50px -10px #000;backdrop-filter:blur(14px);
+  opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .2s, transform .2s}
+.lang-menu.open{opacity:1;transform:none;pointer-events:auto}
+.lang-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:9px;font-size:.9rem;text-align:left}
+.lang-menu button:hover{background:rgba(255,255,255,.06)}
+.lang-menu button.on{background:color-mix(in srgb,var(--accent) 20%,transparent)}
+/* Logo du serveur + chargement des salons */
+.mock-head .logo{overflow:hidden}
+.mock-head .logo img{width:100%;height:100%;object-fit:cover}
+.skl{display:inline-block;height:10px;border-radius:5px;background:rgba(255,255,255,.08);width:var(--w,60%);animation:pulse 1.6s infinite}
+.chan.sk:nth-child(2n) .skl{--w:45%}.chan.sk:nth-child(3n) .skl{--w:70%}
+</style>
+</head>
+<body>
+<div class="nebula"></div>
+<canvas id="stars"></canvas>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="wrap">
+    <a href="#top" class="brand"><img class="brand-logo" src="logo.png" alt="CG"><span>CG</span></a>
+    <div class="nav-links">
+      <a href="#serveur" data-i18n="nav.server"></a>
+      <a href="#app" data-i18n="nav.app"></a>
+      <a href="#comment" data-i18n="nav.how"></a>
+      <a href="#avis" data-i18n="nav.reviews"></a>
+      <a href="#membres" data-i18n="nav.members"></a>
+    </div>
+    <button class="icon-btn" id="openPanel" data-i18n-title="panel.title" aria-label="Personnaliser">🎨</button>
+    <button class="btn btn-primary" data-gate="discord" data-i18n="nav.join"></button>
+    <div class="lang">
+      <button class="lang-btn" id="langBtn" aria-haspopup="true"><span class="flag" id="langFlag"></span><span id="langCode">FR</span><span class="caret">▾</span></button>
+      <div class="lang-menu" id="langMenu">
+        <button data-lang="fr"><span class="flag" data-flag="fr"></span>Français</button>
+        <button data-lang="en"><span class="flag" data-flag="en"></span>English</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+<!-- ============ HERO ============ -->
+<div class="wrap hero">
+  <div class="reveal">
+    <span class="tag"><span class="dot"></span><span id="onlineTag" data-i18n="hero.tag"></span></span>
+    <h1><span data-i18n="hero.t1"></span><br><span class="grad" data-i18n="hero.t2"></span></h1>
+    <p class="lead" data-i18n="hero.lead"></p>
+    <div class="cta">
+      <button class="btn btn-primary" data-gate="discord" data-i18n="cta.join"></button>
+      <button class="btn btn-ghost" data-gate="download" data-i18n="cta.download"></button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="statMembers">—</b><span data-i18n="stat.members"></span></div>
+      <div class="stat"><b id="statOnline">—</b><span data-i18n="stat.online"></span></div>
+      <div class="stat"><b id="statNote">—</b><span data-i18n="stat.note"></span></div>
+      <div class="stat"><b id="statDl">—</b><span data-i18n="stat.dl"></span></div>
+    </div>
+  </div>
+
+  <div class="mock tilt reveal">
+    <div class="mock-head"><span class="logo" id="guildIcon">CG</span><span id="guildName">Serveur CG</span><span style="margin-left:auto;color:var(--muted);font-size:.8rem">⌄</span></div>
+    <div class="mock-body">
+      <div class="cat" id="catName">✦ CG</div>
+      <div id="chanList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SERVEUR ============ -->
+<section id="serveur">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag" data-i18n="srv.tag"></span>
+      <h2 data-i18n="srv.title"></h2>
+      <p data-i18n="srv.sub"></p>
+    </div>
+    <div class="grid g3">
+      <div class="card tilt reveal"><div class="ic">🎮</div><h3 data-i18n="srv.c1t"></h3><p data-i18n="srv.c1"></p></div>
+      <div class="card tilt reveal"><div class="ic">📝</div><h3 data-i18n="srv.c2t"></h3><p data-i18n="srv.c2"></p></div>
+      <div class="card tilt reveal"><div class="ic">🎁</div><h3 data-i18n="srv.c3t"></h3><p data-i18n="srv.c3"></p></div>
+      <div class="card tilt reveal"><div class="ic">🛡️</div><h3 data-i18n="srv.c4t"></h3><p data-i18n="srv.c4"></p></div>
+      <div class="card tilt reveal"><div class="ic">⭐</div><h3 data-i18n="srv.c5t"></h3><p data-i18n="srv.c5"></p></div>
+      <div class="card tilt reveal"><div class="ic">🤝</div><h3 data-i18n="srv.c6t"></h3><p data-i18n="srv.c6"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<section id="app">
+  <div class="wrap app-row">
+    <div class="win tilt reveal">
+      <div class="win-bar"><i></i><i></i><i></i><span class="t">CG LAUNCHER — BETA V.0.20</span></div>
+      <div class="win-tabs"><span data-i18n="tab.home"></span><span class="on" data-i18n="tab.pc"></span><span data-i18n="tab.sony"></span><span data-i18n="tab.movies"></span><span data-i18n="tab.series"></span><span data-i18n="tab.anime"></span><span data-i18n="tab.soft"></span><span data-i18n="tab.packs"></span></div>
+      <div class="win-grid" id="tiles"></div>
+      <div class="win-toast"><span style="font-size:1.4rem">🎮</span><div><b data-i18n="app.toastT"></b><small data-i18n="app.toast"></small></div></div>
+    </div>
+    <div class="reveal">
+      <span class="tag">CG LAUNCHER — BETA</span>
+      <h2 style="font-size:clamp(2rem,3.4vw,2.6rem);margin:16px 0 12px" data-i18n="app.title"></h2>
+      <p style="color:var(--muted)" data-i18n="app.sub"></p>
+      <ul class="feat-list">
+        <li><span data-i18n-html="app.f1"></span></li>
+        <li><span data-i18n-html="app.f2"></span></li>
+        <li><span data-i18n-html="app.f3"></span></li>
+        <li><span data-i18n-html="app.f4"></span></li>
+        <li><span data-i18n-html="app.f5"></span></li>
+        <li><span data-i18n-html="app.f6"></span></li>
+      </ul>
+      <div class="cta" style="margin-bottom:0"><button class="btn btn-primary" data-gate="download" data-i18n="app.dl"></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMMENT ============ -->
+<section id="comment">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="tag" data-i18n="how.tag"></span><h2 data-i18n="how.title"></h2></div>
+    <div class="grid g3 steps">
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s1t"></h3><p data-i18n="how.s1"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s2t"></h3><p data-i18n="how.s2"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s3t"></h3><p data-i18n="how.s3"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s4t"></h3><p data-i18n="how.s4"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s5t"></h3><p data-i18n="how.s5"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s6t"></h3><p data-i18n="how.s6"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s7t"></h3><p data-i18n="how.s7"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s8t"></h3><p data-i18n="how.s8"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s9t"></h3><p data-i18n="how.s9"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s10t"></h3><p data-i18n="how.s10"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s11t"></h3><p data-i18n="how.s11"></p></div>
+      <div class="card tilt step reveal"><span class="n"></span><h3 data-i18n="how.s12t"></h3><p data-i18n="how.s12"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AVIS ============ -->
+<section id="avis">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="tag" data-i18n="rev.tag"></span><h2 data-i18n="rev.title"></h2><p data-i18n="rev.sub"></p></div>
+    <div class="rating reveal">
+      <div class="big-note" id="bigNote">—</div>
+      <div><div class="starsline" id="starsLine">☆☆☆☆☆</div><div style="color:var(--muted);font-size:.9rem" data-i18n="rev.on5"></div></div>
+      <div class="dlbox"><div class="big-dl" id="bigDl">—</div><div style="color:var(--muted);font-size:.9rem" data-i18n="rev.dl"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBRES ============ -->
+<section id="membres">
+  <div class="sec-head reveal"><span class="tag"><span class="dot"></span><span data-i18n="mem.tag"></span></span><h2 data-i18n="mem.title"></h2><p id="membersSub"></p></div>
+  <div class="wrap"><div class="marquee" id="marquee"></div></div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section>
+  <div class="wrap">
+    <div class="final reveal">
+      <h2 data-i18n="fin.title"></h2>
+      <p data-i18n="fin.sub"></p>
+      <div class="cta" style="justify-content:center;margin:0">
+        <button class="btn btn-primary" data-gate="discord" data-i18n="cta.join"></button>
+        <button class="btn btn-ghost" data-gate="download" data-i18n="fin.dl"></button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> CG. <span data-i18n="foot"></span></span>
+    <span class="sig">Developpé par A$AP . I'LL . BCK</span>
+  </div>
+</footer>
+
+<!-- ============ PANNEAU ============ -->
+<aside class="panel" id="panel"></aside>
+
+<!-- ============ MODALE VÉRIF ============ -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <p data-i18n="modal.sub"></p>
+    <div id="ts-box"></div>
+    <div id="ts-msg"></div>
+    <div id="ts-result"><a class="btn btn-primary" id="ts-link" target="_blank" rel="noopener"></a></div>
+    <button class="btn btn-ghost" id="closeModal" style="margin-top:14px" data-i18n="modal.cancel"></button>
+  </div>
+</div>
+
+<script>
+function createTunnel(cv){
+ const gl=cv.getContext('webgl2',{premultipliedAlpha:true,alpha:true,antialias:false});
+ if(!gl)return{draw(){},ok:false};
+ const MAX=7000;
+ const vs=`#version 300 es
+in vec4 aSeed;uniform float uPh,uSize,uDpr,uRev,uSp;uniform int uMode;uniform vec2 uRes,uDir;uniform vec3 uC1,uC2;uniform float uTint;
+out vec2 vP;out float vLen,vW,vB,vMix;out vec3 vTint;
+float hsh(float n){return fract(sin(n*12.9898)*43758.5453);}
+void main(){
+ float big=step(0.985,aSeed.w);
+ float k=0.0;vec2 head,tail;float w,r=0.5;float R=0.5*length(uRes);
+ if(uMode==0){
+  float q=aSeed.y-uRev*uPh;k=floor(q);float d=fract(q);r=0.012*pow(d+0.0005,-1.8);
+  float L=r*(0.03+r*0.10)+0.003;
+  vec2 dir=vec2(cos(fract(aSeed.x+hsh(k+aSeed.w*131.0))*6.2831853),sin(fract(aSeed.x+hsh(k+aSeed.w*131.0))*6.2831853));
+  head=dir*r*R;tail=dir*max(r-uRev*L,0.0)*R;
+  w=(0.7+r*3.4*(0.4+aSeed.z))*uSize*uDpr*(1.0+big*1.8);
+  float fade=smoothstep(0.0,0.06,r)*(1.0-smoothstep(1.05,1.5,r));
+  vB=clamp(0.22+r*1.2,0.0,1.25)*(0.45+aSeed.w*0.9)*fade*(1.0+big*0.8);
+ }else{
+  float qy=aSeed.y+uDir.y*uPh*5.0*(0.5+aSeed.z);k=floor(qy);vec2 p=vec2(fract(aSeed.x+hsh(k+aSeed.w*131.0)),fract(qy));
+  head=(p-0.5)*uRes;float len=(10.0+26.0*aSeed.z)*uDpr*(0.5+uSp*0.4);
+  tail=head-uDir*len;
+  w=(0.8+aSeed.z*1.5)*uSize*uDpr*(1.0+big*1.6);
+  vB=(0.4+aSeed.w*0.7)*(1.0+big*0.7);
+ }
+ float len=max(length(head-tail),1.0);vec2 dir=normalize(head-tail+vec2(1e-5));vec2 perp=vec2(-dir.y,dir.x);
+ float pad=w*4.5+6.0*uDpr;
+ int id=gl_VertexID;float al=float(id/2);float ac=float(id%2)*2.0-1.0;
+ vec2 pos=mix(tail,head,al)+dir*(al*2.0-1.0)*pad+perp*ac*pad;
+ vP=vec2(al*len+(al*2.0-1.0)*pad,ac*pad);vLen=len;vW=w;
+ vec3 base=mix(vec3(0.38,0.68,1.0),vec3(0.75,0.92,1.0),aSeed.z);
+ vec3 grad=mix(uC1,uC2,fract(aSeed.z*7.13+aSeed.x*3.7));grad=mix(grad,vec3(1.0),0.18)*1.35;
+ vTint=mix(base,grad,uTint);vMix=uTint;
+ gl_Position=vec4(pos/(uRes*0.5),0.0,1.0);
+}`;
+ const fs=`#version 300 es
+precision highp float;in vec2 vP;in float vLen,vW,vB,vMix;in vec3 vTint;out vec4 o;
+float dist(vec2 p,float len,float sh){float x=clamp(p.x-sh,0.0,len);return length(vec2(p.x-sh-x,p.y));}
+float I(float d,float w){return exp(-d*d/(w*w*0.45))+0.2*exp(-d*d/(w*w*5.0));}
+void main(){
+ float sh=min(vLen*0.16,vW*2.0)+0.7;
+ float t=clamp(vP.x/vLen,0.0,1.0);float taper=mix(0.3,1.0,t);
+ vec3 cc=vec3(I(dist(vP,vLen,sh),vW),I(dist(vP,vLen,0.0),vW),I(dist(vP,vLen,-sh),vW));
+ vec3 c=mix(vec3(cc.g),cc,mix(0.65,0.12,vMix))*taper*vB;
+ c*=mix(vec3(1.0),vTint*mix(1.25,1.0,vMix),mix(0.7,0.95,vMix));
+ o=vec4(c,max(max(c.r,c.g),c.b));
+}`;
+ const sh=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(x));return x};
+ const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);
+ if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){console.error(gl.getProgramInfoLog(pr));return{draw(){},ok:false}}
+ const seed=new Float32Array(MAX*4);for(let i=0;i<seed.length;i++)seed[i]=Math.random();
+ const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,seed,gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(pr,'aSeed');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,4,gl.FLOAT,false,0,0);gl.vertexAttribDivisor(loc,1);
+ const U=(n)=>gl.getUniformLocation(pr,n);const u={ph:U('uPh'),size:U('uSize'),dpr:U('uDpr'),res:U('uRes'),rev:U('uRev'),sp:U('uSp'),mode:U('uMode'),dir:U('uDir'),c1:U('uC1'),c2:U('uC2'),tint:U('uTint')};
+ const V = {up:[0,1],down:[0,-1]};
+ let ph=0,last=performance.now();
+ return{ok:true,draw(speed,size,density,dirName,tint,c1,c2){
+  const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;ph+=dt*speed*0.035;
+  const dpr=Math.min(1.5,window.devicePixelRatio||1),w=Math.round(cv.clientWidth*dpr),h=Math.round(cv.clientHeight*dpr);
+  if(!w||!h)return;if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}
+  gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.useProgram(pr);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);
+  const radial=dirName=='out'||dirName=='in',d=V[dirName]||[0,0];
+  gl.uniform1f(u.ph,ph);gl.uniform1f(u.size,size);gl.uniform1f(u.dpr,dpr);gl.uniform2f(u.res,w,h);
+  gl.uniform3f(u.c1,c1[0],c1[1],c1[2]);gl.uniform3f(u.c2,c2[0],c2[1],c2[2]);gl.uniform1f(u.tint,tint);gl.uniform1f(u.rev,dirName=='in'?-1:1);gl.uniform1f(u.sp,speed);gl.uniform1i(u.mode,radial?0:1);gl.uniform2f(u.dir,d[0],d[1]);
+  gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,Math.min(MAX,Math.round(density*(radial?24:10))));
+ }}
+}
+/* ===== CG FX : fond d'étoiles (tunnel WebGL aux couleurs du thème), curseur, cartes 3D, panneau « Personnaliser » ===== */
+window.CGFX={init:function(o){
+try{
+const $=(s,r)=>(r||document).querySelector(s);
+const html=document.documentElement,body=document.body;
+const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+const L={
+fr:{title:'Personnaliser',close:'Fermer',color:'Couleur',brush:'Importer mon dégradé (#hex)',hexInfo:'Choisissez 2 couleurs pour votre dégradé (format #RRGGBB).',apply:'Appliquer',hexErr:'Entrez 2 couleurs valides au format #RRGGBB (ex. #7c5cff).',custom:'Couleur perso',stars:'Étoiles',density:'Densité',size:'Taille des étoiles',speed:'Vitesse',dir:'Direction',up:'Vers le haut',down:'Vers le bas',out:"Du centre vers l'extérieur",in:"De l'extérieur vers le centre",noAnim:'Retirer les animations',fx:'Effets',tilt:'Cartes 3D au survol',depth:'Profondeur du contenu',cursor:'Curseur',curN:'Curseur normal',curFx:'Réagit au clic et au survol',reset:'Réinitialiser'},
+en:{title:'Customize',close:'Close',color:'Color',brush:'Import my gradient (#hex)',hexInfo:'Pick 2 colors for your gradient (#RRGGBB format).',apply:'Apply',hexErr:'Enter 2 valid colors in #RRGGBB format (e.g. #7c5cff).',custom:'Custom color',stars:'Stars',density:'Density',size:'Star size',speed:'Speed',dir:'Direction',up:'Upwards',down:'Downwards',out:'Center to outside',in:'Outside to center',noAnim:'Remove animations',fx:'Effects',tilt:'3D cards on hover',depth:'Content depth',cursor:'Cursor',curN:'Normal cursor',curFx:'Reacts to click and hover',reset:'Reset'}};
+const T=()=>L[(o.lang&&o.lang())==='en'?'en':'fr'];
+const PAL=o.palettes;
+const DEF={v:2,pal:0,custom:null,dir:'up',size:.65,density:25,speed:12.5,tilt:true,depth:true,anim:!reduce,curN:false,curFx:true};
+const DIRS=['up','down','out','in'];
+const hexOK=s=>/^#?[0-9a-f]{6}$/i.test((s||'').trim()),hexN=s=>'#'+s.trim().replace('#','').toLowerCase();
+let P={...DEF};
+try{const r=JSON.parse(localStorage.getItem(o.key)||'{}');P={...DEF,...r};
+ if(r.v!==2){P.density=DEF.density;P.speed=DEF.speed;P.size=DEF.size;P.v=2}}catch(e){}
+P.density=Math.min(50,Math.max(0,+P.density||0));P.speed=Math.min(25,Math.max(0,+P.speed||0));P.size=Math.min(1,Math.max(.3,+P.size||DEF.size));
+if(DIRS.indexOf(P.dir)<0)P.dir='up';
+if(P.pal===PAL.length&&!(P.custom&&hexOK(P.custom[0])&&hexOK(P.custom[1])))P.pal=0;
+if(P.pal>PAL.length||P.pal<0)P.pal=0;
+const save=()=>{try{localStorage.setItem(o.key,JSON.stringify(P))}catch(e){}};
+const pal=()=>P.pal===PAL.length&&P.custom?P.custom:(PAL[P.pal]||PAL[0]);
+const rgbf=h=>{h=h.replace('#','');return[0,2,4].map(i=>(parseInt(h.substr(i,2),16)||0)/255)};
+
+/* ---------- styles ---------- */
+const sc=(o.cards||'').split(',').map(s=>s.trim()).filter(Boolean);
+const depthCss=sc.map(c=>'html.cgfx-depth.cgfx-tilt '+c+':hover '+(o.depth||'h3,p').split(',').map(d=>d.trim()).join(', html.cgfx-depth.cgfx-tilt '+c+':hover ')).join(',\n');
+const st=document.createElement('style');
+st.textContent=`
+html.cgfx-cc,html.cgfx-cc *{cursor:none!important}
+html.cgfx-cc input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]),html.cgfx-cc textarea,html.cgfx-cc [contenteditable]{cursor:text!important}
+${depthCss}{transform:translate(calc(var(--cgdx,0)*1px),calc(var(--cgdy,0)*1px)) scale(1.05);transform-origin:left center;text-shadow:0 6px 14px rgba(0,0,0,.65)}
+.cgfx-panel{max-height:calc(100vh - 100px);overflow-y:auto}
+.cgfx-panel .row.off{opacity:.45}
+.cgfx-panel .sw{display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.cgfx-panel .sw.brush{background:rgba(71,85,105,.7);color:#fff}
+.cgfx-hex{margin-top:10px;padding:10px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);display:none}
+.cgfx-hex.open{display:block}
+.cgfx-hex p{font-size:.78rem;opacity:.7;margin:0 0 8px}
+.cgfx-hex .hr{display:flex;gap:6px;flex-wrap:wrap}
+.cgfx-hex input{width:86px;padding:6px 8px;border-radius:8px;background:#0b0a12;color:inherit;border:1px solid rgba(255,255,255,.18);font:12px ui-monospace,monospace}
+.cgfx-hex button{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-size:12px;font-weight:700}
+.cgfx-err{color:#f87171;font-size:.78rem;margin-top:6px}
+.cgfx-dd{position:relative}
+.cgfx-ddb{display:flex;align-items:center;justify-content:space-between;gap:8px;width:168px;white-space:nowrap;background:rgba(11,10,18,.9);color:inherit;border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:7px 10px;font-size:.82rem;font-weight:600}
+.cgfx-ddb:hover,.cgfx-dd.open .cgfx-ddb{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.cgfx-ddb span{overflow:hidden;text-overflow:ellipsis}
+.cgfx-ddb svg{flex:none;color:var(--accent);transition:transform .2s}.cgfx-dd.open .cgfx-ddb span{overflow:hidden;text-overflow:ellipsis}
+.cgfx-ddb svg{flex:none;transform:rotate(180deg)}
+.cgfx-ddm{position:fixed;z-index:2147483000;margin:0;padding:6px;list-style:none;min-width:220px;background:rgba(18,13,29,.97);border:1px solid rgba(255,255,255,.14);border-radius:14px;box-shadow:0 18px 40px -10px #000c;backdrop-filter:blur(10px);opacity:0;transform:translateY(-6px) scale(.98);pointer-events:none;transition:opacity .15s,transform .15s}
+.cgfx-ddm.open{opacity:1;transform:none;pointer-events:auto}
+.cgfx-ddm li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;font-size:.84rem;font-weight:600;color:#cbd5e1;cursor:pointer;white-space:nowrap}
+.cgfx-ddm li i{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-style:normal;background:rgba(255,255,255,.08);color:var(--accent)}
+.cgfx-ddm li:hover,.cgfx-ddm li.k{background:rgba(255,255,255,.08);color:#fff}
+.cgfx-ddm li[aria-selected=true]{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 38%,transparent),color-mix(in srgb,var(--accent-2) 26%,transparent));color:#fff}
+.cgfx-ddm li[aria-selected=true]::after{content:"✓";margin-left:auto;padding-left:12px;font-size:12px}
+`;
+document.head.appendChild(st);
+
+/* ---------- fond d'étoiles ---------- */
+const c2=o.starsCanvas;const cx=c2.getContext('2d');
+const gl=document.createElement('canvas');gl.setAttribute('aria-hidden','true');
+gl.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:'+(getComputedStyle(c2).zIndex==='auto'?'-2':getComputedStyle(c2).zIndex);
+c2.parentNode.insertBefore(gl,c2);
+let tun=null;try{tun=createTunnel(gl);if(!tun.ok)tun=null}catch(e){tun=null}
+let W=0,H=0,DPR=1,shoots=[],fall=[],curDir=P.dir,pend=null,tA=-1e9,raf=0,nextS=0;
+const coarse=!fine;
+function resize(){DPR=Math.min(window.devicePixelRatio||1,2);W=c2.width=Math.round(innerWidth*DPR);H=c2.height=Math.round(innerHeight*DPR);c2.style.width=innerWidth+'px';c2.style.height=innerHeight+'px';buildFall();kick()}
+function buildFall(){fall=Array.from({length:Math.round(P.density*3)},()=>({x:Math.random()*W,y:Math.random()*H,z:.3+Math.random()*1.2,r:.5+Math.random()*1.2,tw:Math.random()*6.28}))}
+function frame(now){
+ raf=0;cx.clearRect(0,0,W,H);
+ if(!P.anim||document.hidden){gl.style.display='none';shoots=[];return}
+ const sp=P.speed/10;
+ if(tun){gl.style.display='block';
+  let f=1;if(pend){f=Math.max(0,1-(now-tA)/500);if(f<=0){curDir=pend;pend=null;tA=now;f=0}}else if(now-tA<800)f=(now-tA)/800;
+  f=f*f*(3-2*f);gl.style.opacity=f;
+  const p=pal();tun.draw(sp,P.size,P.density*(coarse?.6:1),curDir,.85,rgbf(p[0]),rgbf(p[1]));
+ }else{gl.style.display='none';const p=pal();
+  for(const s of fall){s.y-=s.z*sp*DPR*.9;if(s.y<-3){s.y=H+3;s.x=Math.random()*W}s.tw+=.02;cx.globalAlpha=Math.min(1,Math.max(.12,.5+Math.sin(s.tw)*.3+.25*s.z));cx.fillStyle=s.r>1.2?p[1]:'#fff';cx.fillRect(s.x,s.y,s.r*DPR,s.r*DPR)}}
+ if(now>nextS){shoots.push({x:Math.random()*W*.8,y:Math.random()*H/3,l:0});nextS=now+5000+Math.random()*7000}
+ const pc=pal();
+ shoots=shoots.filter(s=>{s.x+=9*DPR;s.y+=5*DPR;s.l++;const g=cx.createLinearGradient(s.x,s.y,s.x-90*DPR,s.y-50*DPR);g.addColorStop(0,'#fff');g.addColorStop(.35,pc[0]);g.addColorStop(1,'rgba(255,255,255,0)');cx.globalAlpha=1;cx.strokeStyle=g;cx.lineWidth=1.6*DPR;cx.beginPath();cx.moveTo(s.x,s.y);cx.lineTo(s.x-90*DPR,s.y-50*DPR);cx.stroke();return s.l<70});
+ cx.globalAlpha=1;raf=requestAnimationFrame(frame);
+}
+function kick(){if(!raf)raf=requestAnimationFrame(frame)}
+document.addEventListener('visibilitychange',kick);
+addEventListener('resize',resize);
+
+/* ---------- curseur ---------- */
+const HOV=o.hover||'a,button,select,label,summary,[role=button],input[type=range],input[type=checkbox],.tilt,.card';
+const TXT='input[type=text],input[type=search],input[type=url],input[type=password],input[type=email],input[type=number],textarea,[contenteditable]';
+let cc=null,cxx=null,mx=-99,my=-99,rx=-99,ry=-99,csize=24,pts=[],rips=[],down=false,hov=false,inW=false,over=false,lastM=0,craf=0;
+const hex2=h=>{h=h.replace('#','');return[0,2,4].map(i=>parseInt(h.substr(i,2),16)||0)};
+const mix=(a,b,t)=>{const A=hex2(a),B=hex2(b);return'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')'};
+function smooth(a){if(a.length<3)return a;let r=a;for(let k=0;k<2;k++){const n=[r[0]];for(let i=0;i<r.length-1;i++){const p=r[i],q=r[i+1];n.push({x:.75*p.x+.25*q.x,y:.75*p.y+.25*q.y,t:.75*p.t+.25*q.t},{x:.25*p.x+.75*q.x,y:.25*p.y+.75*q.y,t:.25*p.t+.75*q.t})}n.push(r[r.length-1]);r=n}return r}
+function curOn(){return fine&&!P.curN}
+function curResize(){if(!cc)return;const d=Math.min(2,window.devicePixelRatio||1);cc.width=Math.round(innerWidth*d);cc.height=Math.round(innerHeight*d)}
+function curFrame(now){
+ craf=0;if(!cxx)return;const d=cc.width/innerWidth;cxx.setTransform(d,0,0,d,0,0);cxx.clearRect(0,0,innerWidth,innerHeight);
+ if(!curOn())return;
+ const c=pal();rx+=(mx-rx)*.5817;ry+=(my-ry)*.5817;
+ let tg=24;if(P.curFx){tg=down?13.2:hov?36:24}csize+=(tg-csize)*.3;
+ const show=inW&&!over,mv=now-lastM<120,LIFE=690;
+ if(show&&mv)pts.push({x:mx,y:my,t:now});while(pts.length&&now-pts[0].t>LIFE)pts.shift();while(pts.length>90)pts.shift();
+ cxx.lineCap='round';cxx.lineJoin='round';
+ const sp=smooth(pts);
+ for(let i=1;i<sp.length;i++){const t=Math.max(0,1-(now-sp[i].t)/LIFE);if(t<=0)continue;cxx.strokeStyle=mix(c[1],c[0],t);cxx.globalAlpha=Math.min(1,t*1.1);cxx.lineWidth=Math.max(.4,2*(.25+.75*t));cxx.beginPath();cxx.moveTo(sp[i-1].x,sp[i-1].y);cxx.lineTo(sp[i].x,sp[i].y);cxx.stroke()}
+ cxx.globalAlpha=1;rips=rips.filter(r=>now-r.t<600);
+ for(const r of rips){const p=(now-r.t)/600,e=1-(1-p)*(1-p);cxx.globalAlpha=.95*(1-p);cxx.strokeStyle=c[0];cxx.lineWidth=2;cxx.shadowColor=c[0];cxx.shadowBlur=10;cxx.beginPath();cxx.arc(r.x,r.y,55*(.12+.88*e),0,7);cxx.stroke();cxx.shadowBlur=0;cxx.globalAlpha=1}
+ if(show){cxx.lineWidth=1.5;cxx.strokeStyle='#fff';cxx.beginPath();cxx.arc(rx,ry,csize/2,0,7);if(P.curFx&&hov){cxx.fillStyle=c[0];cxx.globalAlpha=.22;cxx.fill();cxx.globalAlpha=1}cxx.stroke();cxx.fillStyle=c[0];cxx.shadowColor=c[0];cxx.shadowBlur=8;cxx.beginPath();cxx.arc(mx,my,2.5,0,7);cxx.fill();cxx.shadowBlur=0}
+ if(pts.length>1||rips.length||mv||Math.abs(mx-rx)+Math.abs(my-ry)>.3||Math.abs(csize-tg)>.3)craf=requestAnimationFrame(curFrame);
+}
+function curKick(){if(cxx&&!craf)craf=requestAnimationFrame(curFrame)}
+if(fine){
+ cc=document.createElement('canvas');cc.setAttribute('aria-hidden','true');cc.style.cssText='position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:2147483000';
+ body.appendChild(cc);cxx=cc.getContext('2d');curResize();addEventListener('resize',curResize);
+ addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;inW=true;lastM=performance.now();if(rx<0){rx=mx;ry=my}const t=e.target;hov=!!(t.closest&&t.closest(HOV));over=!!(t.closest&&t.closest(TXT));curKick()},{passive:true});
+ document.addEventListener('mouseout',e=>{if(!e.relatedTarget){inW=false;pts=[];curKick()}});
+ addEventListener('mousedown',e=>{if(e.button||!curOn())return;down=true;if(P.curFx)rips.push({x:e.clientX,y:e.clientY,t:performance.now()});curKick()});
+ addEventListener('mouseup',()=>{down=false;curKick()});
+}
+
+/* ---------- cartes 3D ---------- */
+let curCard=null;
+function cardReset(c){c.style.transform='';c.style.boxShadow='';c.style.removeProperty('--cgdx');c.style.removeProperty('--cgdy')}
+if(fine&&sc.length)document.addEventListener('mousemove',e=>{
+ if(!P.tilt){if(curCard){cardReset(curCard);curCard=null}return}
+ const c=e.target.closest&&e.target.closest(o.cards);
+ if(curCard&&curCard!==c){cardReset(curCard);curCard=null}
+ if(!c)return;curCard=c;
+ const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,k=r.width>600?.4:1;
+ c.style.transition='transform 160ms ease-out, box-shadow 160ms ease-out, border-color .25s';
+ c.style.transform='perspective(900px) translateY(-6px) rotateX('+((.5-y)*16*k).toFixed(2)+'deg) rotateY('+((x-.5)*16*k).toFixed(2)+'deg)';
+ c.style.boxShadow='0 22px 37px -14px color-mix(in srgb,var(--accent) 50%,transparent)';
+ c.style.setProperty('--cgdx',((x-.5)*10).toFixed(2));c.style.setProperty('--cgdy',((y-.5)*8).toFixed(2));
+},{passive:true});
+
+/* ---------- application des réglages ---------- */
+function apply(){
+ const p=pal(),r=html.style;r.setProperty('--accent',p[0]);r.setProperty('--accent-2',p[1]);
+ body.classList.toggle('no-anim',!P.anim);
+ html.classList.toggle('cgfx-tilt',!!P.tilt);html.classList.toggle('cgfx-depth',!!P.depth);
+ html.classList.toggle('cgfx-cc',curOn());
+ if(!curOn()){pts=[];rips=[]}
+ if(!P.tilt&&curCard){cardReset(curCard);curCard=null}
+ buildFall();kick();curKick();
+}
+
+/* ---------- panneau ---------- */
+const panel=o.panel;panel.classList.add('cgfx-panel');
+const ICON={up:'↑',down:'↓',out:'⤢',in:'⤡'};
+const BR='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>';
+const CH='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+const ddm=document.createElement('ul');ddm.className='cgfx-ddm';ddm.setAttribute('role','listbox');document.body.appendChild(ddm);
+let ddBtn=null,kix=0;
+function ddClose(){ddm.classList.remove('open');if(ddBtn)ddBtn.parentNode.classList.remove('open')}
+function ddFill(){const t=T();ddm.innerHTML=DIRS.map((d,i)=>'<li role="option" data-d="'+d+'" aria-selected="'+(d===P.dir)+'"'+(i===kix?' class="k"':'')+'><i>'+ICON[d]+'</i><span>'+t[d]+'</span></li>').join('')}
+ddm.onclick=e=>{const li=e.target.closest('li');if(!li)return;P.dir=li.dataset.d;if(tun){pend=P.dir;tA=performance.now()}else curDir=P.dir;save();ddClose();build()};
+document.addEventListener('mousedown',e=>{if(!ddm.contains(e.target)&&!(ddBtn&&ddBtn.contains(e.target)))ddClose()});
+function build(){
+ const t=T(),on=(v)=>v?' on':'';
+ const sw=PAL.map((p,i)=>'<button type="button" class="sw'+(P.pal===i?' on':'')+'" data-p="'+i+'" style="background:linear-gradient(135deg,'+p[0]+','+p[1]+')" aria-label="'+t.color+' '+(i+1)+'"></button>').join('')
+  +(P.custom?'<button type="button" class="sw'+(P.pal===PAL.length?' on':'')+'" data-p="'+PAL.length+'" style="background:linear-gradient(135deg,'+P.custom[0]+','+P.custom[1]+')" aria-label="'+t.custom+'"></button>':'')
+  +'<button type="button" class="sw brush" id="cgBrush" title="'+t.brush+'" aria-label="'+t.brush+'">'+BR+'</button>';
+ const cur=fine?'<div class="lbl">'+t.cursor+'</div><div class="row"><span>'+t.curN+'</span><button class="toggle'+on(P.curN)+'" data-t="curN" type="button"></button></div><div class="row'+(P.curN?' off':'')+'"><span>'+t.curFx+'</span><button class="toggle'+on(P.curFx&&!P.curN)+'" data-t="curFx" type="button"'+(P.curN?' disabled':'')+'></button></div>':'';
+ panel.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><h4>'+t.title+'</h4><button class="icon-btn" id="cgClose" type="button" style="width:32px;height:32px" aria-label="'+t.close+'">✕</button></div>'
+ +'<div class="lbl">'+t.color+'</div><div class="swatches">'+sw+'</div>'
+ +'<div class="cgfx-hex" id="cgHex"><p>'+t.hexInfo+'</p><div class="hr"><input type="text" id="cgH1" maxlength="7" placeholder="#7c5cff" value="'+(P.custom?P.custom[0]:'')+'"><input type="text" id="cgH2" maxlength="7" placeholder="#c06bff" value="'+(P.custom?P.custom[1]:'')+'"><button type="button" id="cgAp">'+t.apply+'</button></div><div class="cgfx-err" id="cgErr"></div></div>'
+ +'<div class="lbl">'+t.stars+'</div>'
+ +'<div class="row"><span>'+t.density+'</span><input type="range" id="cgDen" min="0" max="50" value="'+P.density+'"></div>'
+ +'<div class="row"><span>'+t.size+'</span><input type="range" id="cgSize" min="30" max="100" value="'+Math.round(P.size*100)+'"></div>'
+ +'<div class="row"><span>'+t.speed+'</span><input type="range" id="cgSpd" min="0" max="25" step=".5" value="'+P.speed+'"></div>'
+ +'<div class="row"><span>'+t.dir+'</span><div class="cgfx-dd"><button type="button" class="cgfx-ddb" id="cgDd" aria-haspopup="listbox"><span>'+t[P.dir]+'</span>'+CH+'</button></div></div>'
+ +'<div class="row"><span>'+t.noAnim+'</span><button class="toggle'+on(!P.anim)+'" data-t="noanim" type="button"></button></div>'
+ +'<div class="lbl">'+t.fx+'</div>'
+ +'<div class="row"><span>'+t.tilt+'</span><button class="toggle'+on(P.tilt)+'" data-t="tilt" type="button"></button></div>'
+ +'<div class="row"><span>'+t.depth+'</span><button class="toggle'+on(P.depth)+'" data-t="depth" type="button"></button></div>'
+ +cur
+ +'<button class="'+(o.btnClass||'btn btn-ghost')+'" id="cgReset" type="button" style="width:100%;justify-content:center;margin-top:18px">'+t.reset+'</button>';
+ const q=s=>panel.querySelector(s);
+ q('#cgClose').onclick=()=>{ddClose();panel.classList.remove('open')};
+ panel.querySelectorAll('.sw[data-p]').forEach(b=>b.onclick=()=>{P.pal=+b.dataset.p;save();apply();build()});
+ q('#cgBrush').onclick=()=>q('#cgHex').classList.toggle('open');
+ q('#cgAp').onclick=()=>{const a=q('#cgH1').value,b=q('#cgH2').value;if(!hexOK(a)||!hexOK(b)){q('#cgErr').textContent=t.hexErr;return}P.custom=[hexN(a),hexN(b)];P.pal=PAL.length;save();apply();build()};
+ q('#cgDen').oninput=e=>{P.density=+e.target.value;save();buildFall()};
+ q('#cgSize').oninput=e=>{P.size=+e.target.value/100;save()};
+ q('#cgSpd').oninput=e=>{P.speed=+e.target.value;save()};
+ panel.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const k=b.dataset.t;if(k==='noanim')P.anim=!P.anim;else P[k]=!P[k];save();apply();build()});
+ q('#cgReset').onclick=()=>{P={...DEF,anim:!reduce};curDir=P.dir;pend=null;save();apply();build()};
+ ddBtn=q('#cgDd');
+ ddBtn.onclick=()=>{if(ddm.classList.contains('open')){ddClose();return}kix=DIRS.indexOf(P.dir);ddFill();const r=ddBtn.getBoundingClientRect(),h=DIRS.length*40+16;
+  ddm.style.minWidth=Math.max(220,r.width)+'px';ddm.style.left=Math.max(8,Math.min(innerWidth-236,r.right-Math.max(220,r.width)))+'px';
+  ddm.style.top=((innerHeight-r.bottom<h+16&&r.top>h+16)?r.top-h-8:r.bottom+8)+'px';ddm.classList.add('open');ddBtn.parentNode.classList.add('open')};
+ ddBtn.onkeydown=e=>{const op=ddm.classList.contains('open');if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!op){ddBtn.onclick();return}kix=(kix+(e.key==='ArrowDown'?1:-1)+DIRS.length)%DIRS.length;ddFill()}else if(e.key==='Enter'&&op){e.preventDefault();ddm.querySelector('li.k').click()}else if(e.key==='Escape')ddClose()};
+}
+if(o.openBtn)o.openBtn.addEventListener('click',()=>{build()});
+panel.addEventListener('scroll',ddClose);
+build();apply();resize();
+}catch(err){console.warn('CGFX:',err)}
+}};
+
+
+</script>
+<script>
+/* =====================================================
+   CONFIG — la seule partie à modifier
+   ===================================================== */
+const CONFIG = {
+  // Clé publique Turnstile (Cloudflare > Turnstile > ton site > "Site Key").
+  // Laisse vide pour tester : les liens s'affichent sans vérification.
+  turnstileSiteKey: "0x4AAAAAAGMv_bF81h02vzcz",
+  verifyUrl: "/api/verify",
+  // Infos du serveur (salons de la catégorie CG, membres, note) via le bot.
+  discordApiUrl: "/api/discord",
+  // Relais cg-avis : compteur de téléchargements
+  statsUrl: "https://cg-avis.perletqn.workers.dev",
+  // Rafraîchissement automatique (en millisecondes) : 2 minutes.
+  refreshEvery: 120000,
+  inviteCode: "u4cY9qsRQ3",
+  guildId: "1367759439138132039",
+  memberRows: 3,
+  // Vitesse du défilement au survol de la souris (1 = normal, 0.25 = 4 fois plus lent).
+  hoverSpeed: 0.25,
+  palettes: [
+    ["#7c5cff","#c06bff"], ["#ffb020","#ff6a3d"], ["#22d3ee","#3b82f6"]
+  ]
+};
+
+/* ============ TEXTES FR / EN ============ */
+const I18N = {
+  fr: {
+    "title":"Site Officiel CG Launcher PC",
+    "nav.server":"Notre Discord","nav.app":"L'app","nav.how":"Comment ça marche","nav.reviews":"Avis","nav.members":"Membres","nav.join":"Rejoindre",
+    "hero.tag":"Serveur en ligne","hero.tagN":"{n} membres en ligne",
+    "hero.t1":"Vos contenues préférés disponibles,","hero.t2":"gratuitement et en illimité",
+    "hero.lead":"Entrer dans un monde fantastique, où tous vos contenues favoris sont disponibles gratuitemetn et illimité. Vous recherchez un jeu ? Alors vous êtes au bon endroit !",
+    "cta.join":"Envoyer ma candidature Discord","cta.download":"⬇ Télécharger l'application PC",
+    "stat.members":"MEMBRES","stat.online":"EN LIGNE","stat.note":"NOTE MOYENNE SUR 5","stat.dl":"TÉLÉCHARGEMENTS","rev.dl":"téléchargements de l'app",
+    "srv.tag":"Notre Discord","srv.title":"","srv.sub":"Un nouvel ère pour CG ! Le deploiment de l'application PC, permet de sécuriser l'ajout de nos contenues et la sécurité de nos membres",
+    "srv.c1t":"Annonces automatiques","srv.c1":"Chaque nouveauté est annoncée dans le bon salon : jeux PC, Sony PC, mises à jour, vidéos, logiciels, packs.",
+    "srv.c2t":"Demandes d'ajout","srv.c2":"Il te manque quelque chose ? Fais une demande, le bot te répond directement quand elle est traitée.",
+    "srv.c3t":"Giveaways","srv.c3":"Des clés et codes de jeux à gagner régulièrement, tirés au sort automatiquement pour les membres.",
+    "srv.c4t":"Modération sérieuse","srv.c4":"Liens douteux bloqués, faux cadeaux filtrés, blacklist : le serveur reste sain.",
+    "srv.c5t":"Avis transparents","srv.c5":"Les avis laissés depuis l'app sont publiés sur le serveur et la note moyenne est visible par tous.",
+    "srv.c6t":"Une vraie communauté","srv.c6":"Discussions, entraide et partage entre passionnés, dans une ambiance chill.",
+    "tab.home":"Accueil","tab.pc":"Jeux PC","tab.sony":"Jeux Sony PC","tab.movies":"Films","tab.series":"Séries","tab.anime":"Animés","tab.soft":"Logiciels","tab.packs":"Packs Graphiques",
+    "app.toastT":"CRIMSON DESERT à été ajouté ","app.toast":"Disponible maintenant dans Jeux PC",
+    "app.title":"Tout le catalogue CG, dans une app légère","app.sub":"Connecte-toi avec Discord et retrouve tout le contenu du serveur, rangé par catégorie et mis à jour en direct.",
+    "app.f1":"<b>Connexion Discord</b> : un clic, pas de compte à créer.","app.f2":"<b>Catalogue en ligne</b> : les nouveautés arrivent sans réinstaller l'app.",
+    "app.f3":"<b>Notifications</b> pour chaque nouvel ajout.","app.f4":"<b>Demandes et avis</b> envoyés directement depuis l'app.",
+    "app.f5":"<b>Membres connectés</b> visibles en temps réel.","app.f6":"<b>Français / English</b>, en un clic.",
+    "app.dl":"⬇ Télécharger pour Windows",
+    "how.tag":"En 6 étapes","how.title":"Comment ça marche",
+    "how.s1t":"Rejoindre notre Discord","how.s1":"Envoie ta candidature pour rejoindre le Discord, accepter le règlement du serveur pour avoir ton rôle @CG MEMEBRE et voir tous les salons du Discord.",
+    "how.s2t":"Installer notre application","how.s2":"Télécharge notre launcher pour Windows, installez et connecter vous avec votre compte Discord. Vous devez obligatoirement être sur notre Discord, pour pouvoir utiliser notre application.",
+    "how.s3t":"Entrer dans l'aventure","how.s3":"Parcours notre catalogue, à la recherche de tes contenues préférés !",
+    "how.s4t":"Impossible de le trouver","how.s4":"Impossible ? Ca n'existe pas pour nous, ici il y a un garantie qu'on vous donne ce que vous avez besoin !",
+    "how.s5t":"Je ne trouve pas ce que je veux","how.s5":"Depuis notre application, vous pouvez effectuer une demande d'ajout. ",
+    "how.s6t":"Laisser nous une note !","how.s6":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "how.s7t":"Entrer dans l'aventure","how.s7":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "how.s8t":"Entrer dans l'aventure","how.s8":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "how.s9t":"Entrer dans l'aventure","how.s9":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "how.s10t":"Entrer dans l'aventure","how.s10":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "how.s11t":"Entrer dans l'aventure","how.s11":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "how.s12t":"Entrer dans l'aventure","how.s12":"Parcours le catalogue, fais tes demandes et laisse ton avis.",
+    "rev.tag":"Avis","rev.title":"Ce qu'en pense la communauté","rev.sub":"Note calculée à partir des avis envoyés depuis l'app.","rev.on5":"sur 5, avis vérifiés des membres",
+    "mem.tag":"En direct","mem.title":"Ils sont sur CG","mem.sub":"Les membres connectés en ce moment sur le serveur.","mem.subN":"{n} membres connectés en ce moment sur le serveur.","mem.empty":"La liste des membres arrive bientôt.",
+    "st.online":"En ligne","st.idle":"Absent","st.dnd":"Ne pas déranger",
+    "fin.title":"Prêt à rejoindre l'aventure ?","fin.sub":"Aucune PUB & Virus. Tout est gratuit. Une connexion à votre compte Discord est requise.","fin.dl":"⬇ Télécharger notre Launcher",
+    "foot":"Non affilié à Discord.",
+    "panel.title":"Personnaliser","panel.color":"Couleur","panel.stars":"Étoiles","panel.show":"Afficher","panel.density":"Densité","panel.speed":"Vitesse","panel.shoot":"Étoiles filantes","panel.fx":"Effets","panel.tilt":"Cartes 3D","panel.anim":"Animations","panel.reset":"Réinitialiser",
+    "modal.sub":"Petite vérification anti-robot avant d'afficher le lien.","modal.cancel":"Annuler","modal.discord":"Rejoindre le Discord CG","modal.download":"Télécharger CG Game App",
+    "modal.test":"Mode test : Turnstile n'est pas encore configuré.","modal.loading":"Chargement…","modal.checking":"Vérification…","modal.ok":"✓ Vérifié","modal.fail":"La vérification a échoué, réessaie.",
+    "modal.openDiscord":"Ouvrir l'invitation Discord","modal.dlNow":"Télécharger maintenant"
+  },
+  en: {
+    "title":"CG — Discord Server & CG Game App",
+    "nav.server":"The server","nav.app":"The app","nav.how":"How it works","nav.reviews":"Reviews","nav.members":"Members","nav.join":"Join",
+    "hero.tag":"Server online","hero.tagN":"{n} members online",
+    "hero.t1":"Your gaming community,","hero.t2":"all in one place.",
+    "hero.lead":"CG is a Discord server and an app: PC games, Sony PC games, movies, series, anime, software and graphic packs, added at members' request.",
+    "cta.join":"Join the Discord","cta.download":"⬇ Download CG Game App",
+    "stat.members":"members","stat.online":"online","stat.note":"average rating / 5","stat.dl":"downloads","rev.dl":"app downloads",
+    "srv.tag":"The server","srv.title":"A clean, active and well-organized Discord","srv.sub":"Every category has its own channel. You ask, the team adds it, everyone gets notified.",
+    "srv.c1t":"Automatic announcements","srv.c1":"Every new addition is announced in the right channel: PC games, Sony PC, updates, videos, software, packs.",
+    "srv.c2t":"Add requests","srv.c2":"Missing something? Make a request, the bot replies directly once it's handled.",
+    "srv.c3t":"Giveaways","srv.c3":"Game keys and codes to win regularly, drawn automatically for members.",
+    "srv.c4t":"Serious moderation","srv.c4":"Shady links blocked, fake gifts filtered, blacklist: the server stays clean.",
+    "srv.c5t":"Transparent reviews","srv.c5":"Reviews sent from the app are posted on the server and the average rating is visible to everyone.",
+    "srv.c6t":"A real community","srv.c6":"Chats, help and sharing between enthusiasts, in a chill atmosphere.",
+    "tab.home":"Home","tab.pc":"PC Games","tab.sony":"Sony PC Games","tab.movies":"Movies","tab.series":"Series","tab.anime":"Anime","tab.soft":"Software","tab.packs":"Packs",
+    "app.toastT":"New game added","app.toast":"Available now in PC Games",
+    "app.title":"The whole CG catalog, in a lightweight app","app.sub":"Sign in with Discord and find all the server's content, sorted by category and updated live.",
+    "app.f1":"<b>Discord sign-in</b>: one click, no account to create.","app.f2":"<b>Online catalog</b>: new content arrives without reinstalling the app.",
+    "app.f3":"<b>Notifications</b> for every new addition.","app.f4":"<b>Requests and reviews</b> sent straight from the app.",
+    "app.f5":"<b>Online members</b> visible in real time.","app.f6":"<b>Français / English</b>, in one click.",
+    "app.dl":"⬇ Download for Windows",
+    "how.tag":"3 steps","how.title":"How it works",
+    "how.s1t":"Join the Discord","how.s1":"Pass the verification, join the server and get the CG Member role.",
+    "how.s2t":"Install the app","how.s2":"Download CG Game App for Windows, install it and sign in with Discord.",
+    "how.s3t":"Enjoy","how.s3":"Browse the catalog, make requests and leave a review.",
+    "rev.tag":"Reviews","rev.title":"What the community thinks","rev.sub":"Rating based on reviews sent from the app.","rev.on5":"out of 5, verified member reviews",
+    "mem.tag":"Live","mem.title":"They're on CG","mem.sub":"Members currently online on the server.","mem.subN":"{n} members currently online on the server.","mem.empty":"The member list is coming soon.",
+    "st.online":"Online","st.idle":"Idle","st.dnd":"Do not disturb",
+    "fin.title":"Ready to join CG?","fin.sub":"The server and the app are free. It only takes a quick verification.","fin.dl":"⬇ Download the app",
+    "foot":"Not affiliated with Discord.",
+    "panel.title":"Customize","panel.color":"Color","panel.stars":"Stars","panel.show":"Show","panel.density":"Density","panel.speed":"Speed","panel.shoot":"Shooting stars","panel.fx":"Effects","panel.tilt":"3D cards","panel.anim":"Animations","panel.reset":"Reset",
+    "modal.sub":"Quick anti-bot check before showing the link.","modal.cancel":"Cancel","modal.discord":"Join the CG Discord","modal.download":"Download CG Game App",
+    "modal.test":"Test mode: Turnstile isn't set up yet.","modal.loading":"Loading…","modal.checking":"Checking…","modal.ok":"✓ Verified","modal.fail":"Verification failed, please try again.",
+    "modal.openDiscord":"Open the Discord invite","modal.dlNow":"Download now"
+  }
+};
+const FLAGS = {
+  fr:'<svg viewBox="0 0 3 2"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>',
+  en:'<svg viewBox="0 0 19 10"><rect width="19" height="10" fill="#B22234"/><g fill="#fff"><rect y="0.77" width="19" height="0.77"/><rect y="2.31" width="19" height="0.77"/><rect y="3.85" width="19" height="0.77"/><rect y="5.38" width="19" height="0.77"/><rect y="6.92" width="19" height="0.77"/><rect y="8.46" width="19" height="0.77"/></g><rect width="7.6" height="5.38" fill="#3C3B6E"/></svg>'
+};
+let LANG = "fr";
+try{ LANG = localStorage.getItem("cg-lang") || "fr" }catch(e){}
+const t = (k, n) => (I18N[LANG][k] ?? I18N.fr[k] ?? k).replace("{n}", n);
+const nf = n => new Intl.NumberFormat(LANG === "fr" ? "fr-FR" : "en-US", {notation:"compact", maximumFractionDigits:1}).format(n);
+
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll("[data-i18n-html]").forEach(el => el.innerHTML = t(el.dataset.i18nHtml));
+  document.querySelectorAll("[data-i18n-title]").forEach(el => el.title = t(el.dataset.i18nTitle));
+  langFlag.innerHTML = FLAGS[LANG]; langCode.textContent = LANG.toUpperCase();
+  document.querySelectorAll("[data-lang]").forEach(b => b.classList.toggle("on", b.dataset.lang === LANG));
+  renderData(); renderMembers(true);
+  if(widgetId !== null && window.turnstile){ turnstile.remove(widgetId); widgetId = null }
+}
+document.querySelectorAll("[data-flag]").forEach(s => s.innerHTML = FLAGS[s.dataset.flag]);
+langBtn.onclick = e => { e.stopPropagation(); langMenu.classList.toggle("open") };
+document.addEventListener("click", () => langMenu.classList.remove("open"));
+document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => {
+  LANG = b.dataset.lang; try{ localStorage.setItem("cg-lang", LANG) }catch(e){}
+  langMenu.classList.remove("open"); applyLang();
+});
+
+/* ============ APPARITION AU SCROLL ============ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(!e.isIntersecting) return;
+  const el = e.target; el.classList.add("in"); io.unobserve(el);
+  setTimeout(() => { el.classList.remove("reveal","in"); el.style.transitionDelay = "" }, 1100);
+}), {threshold:.12});
+document.querySelectorAll(".reveal").forEach((el,i) => { el.style.transitionDelay = (i%3)*90+"ms"; io.observe(el) });
+
+/* ============ FAUSSES JAQUETTES (aperçu app) ============ */
+const tiles = document.getElementById("tiles");
+for(let i=0;i<8;i++){
+  const d = document.createElement("div"); d.className = "tile";
+  const h = (i*47 + 250) % 360;
+  d.style.background = `linear-gradient(160deg, hsl(${h} 70% 45%), hsl(${(h+50)%360} 60% 18%))`;
+  tiles.appendChild(d);
+}
+
+/* ============ DONNÉES DU SERVEUR (salons, membres, note) ============ */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CH_ICON = {0:"#", 5:"📢", 2:"🔊", 13:"🎙️", 15:"💬", 16:"🖼️"};
+let DATA = null;   // réponse de /api/discord
+
+function renderData(){
+  // Salons (catégorie CG)
+  const list = DATA && DATA.channels && DATA.channels.length ? DATA.channels : null;
+  catName.textContent = "✦ " + (DATA && DATA.category ? DATA.category : "CG");
+  chanList.innerHTML = list
+    ? list.map((c,i) => `<div class="chan${i===0?" active":""}"><span class="h">${CH_ICON[c.type]||"#"}</span>${esc(c.name)}</div>`).join("")
+    : Array.from({length:8}, () => `<div class="chan sk"><span class="h">#</span><span class="skl"></span></div>`).join("");
+  if(DATA && DATA.name){
+    guildName.textContent = DATA.name;
+    if(DATA.icon) guildIcon.innerHTML = `<img src="${esc(DATA.icon)}" alt="">`;
+  }
+  // Chiffres
+  if(DATA && DATA.members != null){
+    statMembers.textContent = nf(DATA.members);
+    statOnline.textContent  = nf(DATA.online);
+    onlineTag.textContent   = t("hero.tagN", nf(DATA.online));
+  }
+  // Note
+  if(DATA && DATA.rating != null){
+    const r = DATA.rating;
+    statNote.textContent = bigNote.textContent = r.toFixed(1);
+    const full = Math.round(r);
+    starsLine.textContent = "★".repeat(full) + "☆".repeat(5-full);
+  }
+}
+let DL = null;
+function renderDl(){ if(DL!=null) statDl.textContent = bigDl.textContent = nf(DL) }
+async function dlCall(path){
+  try{
+    const r = await fetch(CONFIG.statsUrl + path, {method:"POST", headers:{"Content-Type":"application/json"}, body:"{}"});
+    const d = await r.json(); if(typeof d.downloads==="number"){ DL=d.downloads; renderDl() }
+  }catch(e){}
+}
+async function loadData(){
+  dlCall("/downloads");
+  try{
+    const r = await fetch(CONFIG.discordApiUrl, {cache:"no-store"});
+    const d = await r.json();
+    if(d.ok){ DATA = d; renderData() }
+  }catch(e){}
+}
+
+/* ============ MEMBRES CONNECTÉS (widget Discord) ============ */
+let MEMBERS = [], MEMBERS_KEY = "", PRESENCE = null;
+function memberCard(m){
+  const av = m.avatar_url ? `<img src="${esc(m.avatar_url)}" alt="" loading="lazy">` : `<span class="ph">${esc((m.username||"?")[0].toUpperCase())}</span>`;
+  const st = ["online","idle","dnd"].includes(m.status) ? m.status : "online";
+  const sub = m.activity && m.activity.name ? "🎮 " + m.activity.name : t("st." + st);
+  return `<div class="mcard"><div class="mav">${av}<i class="${st}"></i></div><div><b>${esc(m.username)}</b><small>${esc(sub)}</small></div></div>`;
+}
+function renderMembers(force){
+  membersSub.textContent = PRESENCE ? t("mem.subN", PRESENCE) : t("mem.sub");
+  const key = MEMBERS.map(m => m.username + m.status + (m.activity ? m.activity.name : "")).join("|");
+  if(!force && key === MEMBERS_KEY) return;   // rien n'a changé : on ne relance pas le défilement
+  MEMBERS_KEY = key;
+  const box = document.getElementById("marquee");
+  const list = MEMBERS;
+  if(!list.length){ box.innerHTML = `<p class="members-empty">${t("mem.empty")}</p>`; return }
+  const rows = Math.min(CONFIG.memberRows, Math.max(1, Math.ceil(list.length/4)));
+  const per = Math.ceil(list.length/rows);
+  box.innerHTML = "";
+  for(let r=0;r<rows;r++){
+    let part = list.slice(r*per, (r+1)*per);
+    if(!part.length) part = list;
+    while(part.length < 8) part = part.concat(part);
+    const row = document.createElement("div");
+    row.className = "mrow" + (r%2 ? " rev" : "");
+    row.style.setProperty("--dur", (part.length*5 + r*6) + "s");
+    row.innerHTML = part.map(memberCard).join("").repeat(2);
+    box.appendChild(row);
+  }
+}
+async function loadMembers(){
+  try{
+    const r = await fetch(`https://discord.com/api/guilds/${CONFIG.guildId}/widget.json`, {cache:"no-store"});
+    if(!r.ok) throw 0;
+    const d = await r.json();
+    PRESENCE = d.presence_count || null;
+    MEMBERS = (d.members||[]).slice().sort((a,b) => a.username.localeCompare(b.username));
+  }catch(e){}
+  renderMembers(false);
+}
+/* Ralentit en douceur au survol (sans s'arrêter), puis reprend */
+(() => {
+  const box = document.getElementById("marquee");
+  let target = 1, rate = 1;
+  box.addEventListener("mouseenter", () => target = CONFIG.hoverSpeed);
+  box.addEventListener("mouseleave", () => target = 1);
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(Math.abs(rate - target) < .005) return;
+    rate += (target - rate) * .08;
+    box.querySelectorAll(".mrow").forEach(r => r.getAnimations().forEach(a => a.playbackRate = rate));
+  })();
+})();
+
+year.textContent = new Date().getFullYear();
+
+/* ============ VÉRIFICATION TURNSTILE ============ */
+let gateType = null, widgetId = null;
+const modal = document.getElementById("modal");
+document.querySelectorAll("[data-gate]").forEach(b => b.addEventListener("click", () => openGate(b.dataset.gate)));
+closeModal.onclick = () => { modal.classList.remove("open"); if(widgetId!==null && window.turnstile) turnstile.reset(widgetId) };
+modal.onclick = e => { if(e.target===modal) closeModal.onclick() };
+
+function openGate(type){
+  gateType = type;
+  modalTitle.textContent = t(type==="discord" ? "modal.discord" : "modal.download");
+  document.getElementById("ts-result").style.display="none"; tsMsg("");
+  modal.classList.add("open");
+  if(!CONFIG.turnstileSiteKey){
+    return verify("none");   // Turnstile pas encore configuré : le serveur donne directement le lien
+  }
+  const go = () => {
+    if(widgetId===null){
+      widgetId = turnstile.render("#ts-box", {sitekey:CONFIG.turnstileSiteKey, theme:"dark", language:LANG, callback: verify});
+    } else turnstile.reset(widgetId);
+  };
+  window.turnstile ? go() : (tsMsg(t("modal.loading")), setTimeout(() => openGate(type), 400));
+}
+function tsMsg(s){ document.getElementById("ts-msg").textContent = s }
+async function verify(token){
+  tsMsg(t("modal.checking"));
+  try{
+    const r = await fetch(CONFIG.verifyUrl, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({token, type:gateType})});
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error||"refusé");
+    showLink(d.url);
+    tsMsg(t("modal.ok"));
+  }catch(e){
+    tsMsg(t("modal.fail"));
+    if(widgetId!==null) turnstile.reset(widgetId);
+  }
+}
+function showLink(url){
+  const link = document.getElementById("ts-link");
+  link.href = url;
+  link.textContent = t(gateType==="discord" ? "modal.openDiscord" : "modal.dlNow");
+  document.getElementById("ts-result").style.display = "block";
+}
+// +1 à chaque clic sur « Télécharger maintenant »
+document.getElementById("ts-link").addEventListener("click", () => {
+  if(gateType==="download"){ if(DL!=null){ DL++; renderDl() } dlCall("/downloads/hit") }
+});
+
+/* ============ PANNEAU / ÉTOILES / EFFETS (CG FX) ============ */
+const panel = document.getElementById("panel");
+openPanel.onclick = () => panel.classList.toggle("open");
+CGFX.init({key:"cg-prefs", palettes:CONFIG.palettes, panel:panel, openBtn:openPanel, starsCanvas:document.getElementById("stars"),
+  lang:() => LANG, cards:".tilt", depth:"h3,p,.ic", btnClass:"btn btn-ghost",
+  hover:"a,button,select,label,summary,[role=button],input[type=range],.tilt,.card,.btn,.icon-btn"});
+
+/* ============ DÉMARRAGE ============ */
+applyLang();
+loadData(); loadMembers();
+setInterval(() => { loadData(); loadMembers() }, CONFIG.refreshEvery);
+</script>
+</body>
+</html>
